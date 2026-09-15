@@ -38,3 +38,18 @@ test('首页其余两个作品入口都有落地页', () => {
   assert.ok(fs.existsSync('app/apps/page.tsx'));
   assert.ok(fs.existsSync('app/works/page.tsx'));
 });
+
+test('首页使用数字作品展厅结构，入口仍由数据驱动', () => {
+  const source = fs.readFileSync(new URL('../app/page.tsx', import.meta.url), 'utf8');
+
+  assert.match(source, /gallery-hero/);
+  assert.match(source, /gallery-stage/);
+  assert.match(source, /siteSections\.map/);
+});
+
+test('展厅样式同时覆盖不等宽网格与减少动态效果偏好', () => {
+  const css = fs.readFileSync(new URL('../app/site.css', import.meta.url), 'utf8');
+
+  assert.match(css, /gallery-card-grid/);
+  assert.match(css, /prefers-reduced-motion/);
+});
