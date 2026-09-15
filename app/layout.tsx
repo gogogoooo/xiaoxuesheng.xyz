@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './site.css';
 
 
 export const metadata: Metadata = {
-  title: '小小电路实验室',
-  description: '拿出电池、灯泡和开关，自由连接，观察电路的变化。',
+  title: '小学生的作品',
+  description: '小朋友实验室、小程序与网页作品的个人展示门户。',
 };
 
 export default function RootLayout({
