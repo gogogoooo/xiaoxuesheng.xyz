@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {initialScene,solveCircuit,validScene} from '../lib/circuit.ts';
+const closed=()=>{const s=initialScene();s.parts[2].closed=true;return s;};
+test('open switch and broken wire stop current',()=>{assert.equal(solveCircuit(initialScene()).currents.bulb,0);const s=closed();s.wires.pop();assert.equal(solveCircuit(s).currents.bulb,0);});
+test('closed lamp obeys 1.5V / total resistance',()=>{const r=solveCircuit(closed());assert.ok(Math.abs(Math.abs(r.currents.bulb)-1.5/8.27)<1e-6);assert.equal(r.short,false);});
+test('series lamps have identical lower current',()=>{const s=closed();s.parts.push({id:'b2',kind:'bulb',x:700,y:400});s.wires[1].b='b2:0';s.wires.push({id:'w4',a:'b2:1',b:'switch:1'});const r=solveCircuit(s);assert.ok(Math.abs(Math.abs(r.currents.bulb)-1.5/16.27)<1e-6);assert.ok(Math.abs(r.currents.bulb-r.currents.b2)<1e-6);});
+test('parallel lamps each carry expected branch current',()=>{const s=closed();s.parts.push({id:'b2',kind:'bulb',x:700,y:400});s.wires.push({id:'w4',a:'bulb:0',b:'b2:0'},{id:'w5',a:'bulb:1',b:'b2:1'});const r=solveCircuit(s);assert.ok(Math.abs(r.currents.bulb-r.currents.b2)<1e-6);assert.ok(Math.abs(Math.abs(r.currents.bulb)-1.5/4.27/2)<1e-6);});
+test('motor direction reverses when leads swap',()=>{const s=closed();s.parts[1].kind='motor';const before=solveCircuit(s).currents.bulb;[s.wires[0].b,s.wires[1].a]=[s.wires[1].a,s.wires[0].b];assert.ok(Math.abs(before+solveCircuit(s).currents.bulb)<1e-6);});
+test('shorted battery triggers pause',()=>{const s=closed();s.wires.push({id:'short',a:'battery:0',b:'battery:1'});assert.equal(solveCircuit(s).short,true);});
+test('isolated spare apparatus do not change working circuit',()=>{const s=closed();const before=solveCircuit(s).currents.bulb;s.parts.push({id:'spare',kind:'battery',x:100,y:200},{id:'sparebulb',kind:'bulb',x:300,y:500});const r=solveCircuit(s);assert.ok(Math.abs(r.currents.bulb-before)<1e-6);assert.equal(r.currents.spare,0);assert.equal(r.currents.sparebulb,0);});
+test('empty desk is valid and unpowered',()=>{assert.deepEqual(solveCircuit({parts:[],wires:[]}),{currents:{},short:false});assert.equal(validScene({parts:[],wires:[]}),true);});
+test('bad saved state rejected',()=>{assert.equal(validScene(null),false);assert.equal(validScene({parts:[{}],wires:[]}),false);const s=closed();s.wires[0].a='missing:0';assert.equal(validScene(s),false);assert.equal(validScene(initialScene()),true);});
