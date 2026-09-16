@@ -3,6 +3,10 @@ import {EntryCard} from '@/components/entry-card';
 import {SiteShell} from '@/components/site-shell';
 import {experimentsBySubject, isSubjectSlug, labSubjects} from '@/lib/site-content';
 
+export function generateStaticParams() {
+  return labSubjects.map(({slug}) => ({subject: slug}));
+}
+
 export default async function SubjectPage({params}: {params: Promise<{subject: string}>}) {
   const {subject} = await params;
   if (!isSubjectSlug(subject)) notFound();

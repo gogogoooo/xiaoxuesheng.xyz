@@ -1,11 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './site.css';
+import './gallery-overrides.css';
 
 
 export const metadata: Metadata = {
-  title: '小学生的作品',
-  description: '小朋友实验室、小程序与网页作品的个人展示门户。',
+  title: '造物档案馆',
+  description: '收集作品、实验和每一个逐渐成形的想法。',
 };
 
 export default function RootLayout({

@@ -1,0 +1,5 @@
+main{scrollbar-width:thin;scrollbar-color:#cdd7e6 transparent}
+input[type=file]{font-size:13px;max-width:100%;color:#75859a}
+input[type=file]::file-selector-button{border:0;background:#edf3ff;color:#2461dc;border-radius:7px;padding:9px 12px;margin-right:8px;cursor:pointer}
+.order-title,.event,.choice,.hint,.detail-state h1{overflow-wrap:anywhere}
+@media(max-width:360px){main{padding:17px 14px}.hero{padding:20px 17px}.role-btn{padding:8px;font-size:12px}.greeting{font-size:19px}.date-line{font-size:13px;gap:8px}.detail-row{gap:10px}}

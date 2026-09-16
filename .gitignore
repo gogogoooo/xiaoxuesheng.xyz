@@ -38,3 +38,6 @@ next-env.d.ts
 /work/
 /.worktrees/
 *.tsbuildinfo
+
+# local deployment bundle
+/xiaoxuesheng-pages-upload.zip
