@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#eeeade" />
+    <title>流沙模拟器 · 造物档案馆</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="physics.js"></script>
+    <script defer src="game.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">≋</span>
+        <div>
+          <span class="eyebrow">THE SANDBOX COLLECTION / 001</span>
+          <h1>流沙模拟器<span>QUICKSAND LAB</span></h1>
+        </div>
+      </div>
+      <div class="top-meta">
+        <span class="offline"><i></i> 离线沙盒</span
+        ><button id="help" class="quiet" aria-expanded="false">
+          玩法说明 <span>?</span>
+        </button>
+      </div>
+    </header>
+    <main class="layout">
+      <section class="playground" aria-label="流沙实验沙盘">
+        <div class="stage-heading">
+          <div>
+            <span class="eyebrow">自由实验 · 没有输赢</span>
+            <h2>让好奇心，陷进去。</h2>
+            <p>画一片流沙，看看会发生什么。</p>
+          </div>
+          <div class="scene-tag"><span>01</span> 实验进行中</div>
+        </div>
+        <canvas
+          id="world"
+          tabindex="0"
+          aria-label="流沙沙盘：WASD 移动，左键绘制，右键擦除，Alt 加拖动旋转，滚轮缩放"
+        ></canvas>
+        <div class="player-status">
+          <span class="player-dot"></span
+          ><strong id="player-state">站在安全地面</strong
+          ><span id="depth-text">沉没 0%</span>
+          <div class="depth-track"><div id="depth-fill"></div></div>
+        </div>
+        <div class="canvas-tools">
+          <button id="view-reset" title="还原视角">
+            ↺ <span>还原视角</span></button
+          ><button id="pause" aria-pressed="false">Ⅱ <span>暂停</span></button>
+        </div>
+        <div class="stage-footer">
+          <span
+            ><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 移动 / 挣扎</span
+          ><span>Alt + 拖动 旋转 · 滚轮 缩放</span>
+        </div>
+        <div id="toast" class="toast" role="status" aria-live="polite">
+          先试着走进一片流沙吧
+        </div>
+        <div class="touch-move" aria-label="触屏方向键">
+          <button data-move="w" aria-label="向前">↑</button>
+          <div>
+            <button data-move="a" aria-label="向左">←</button
+            ><button data-move="s" aria-label="向后">↓</button
+            ><button data-move="d" aria-label="向右">→</button>
+          </div>
+        </div>
+        <div id="help-panel" class="help-panel" hidden>
+          <h3>你的流沙实验手册</h3>
+          <p>
+            <b>走一走</b>　WASD /
+            方向键移动，持续移动可减缓下沉。完全淹没会回到安全出生点。
+          </p>
+          <p>
+            <b>画一画</b
+            >　选材质后左键拖动绘制；右键拖动擦除。绿色出生区不能涂画。
+          </p>
+          <p>
+            <b>转一转</b>　Alt＋左键 /
+            中键拖动旋转，滚轮缩放；也可选择“视角”工具直接拖动。
+          </p>
+          <p>
+            <b>试一试</b>　选“生成克隆人”后点击沙盘，最多 24
+            个，自动漫游并循环重生。
+          </p>
+          <p>
+            <b>触屏</b
+            >　用屏幕方向键移动；切换视角工具单指旋转，用右侧滑块缩放。
+          </p>
+          <p class="disclaimer">
+            卡通游戏规则，不是真实流沙物理或户外安全指导。
+          </p>
+          <button id="help-close">知道了，开始实验 →</button>
+        </div>
+      </section>
+      <aside class="panel" aria-label="沙盘工具面板">
+        <div class="panel-title">
+          <span class="eyebrow">MAKE SOMETHING CURIOUS</span>
+          <h2>你的实验台 <span>✳</span></h2>
+        </div>
+        <section class="panel-section">
+          <div class="section-label">
+            <h3>01 / 选择材质</h3>
+            <span>三种不同手感</span>
+          </div>
+          <div class="materials" role="group" aria-label="流沙材质">
+            <button
+              class="material selected"
+              data-material="sand"
+              aria-pressed="true"
+            >
+              <span class="swatch sand" aria-hidden="true">≋</span
+              ><span><strong>黄沙</strong><small>轻柔下陷 · 浮力高</small></span
+              ><span class="check">✓</span>
+            </button>
+            <button
+              class="material"
+              data-material="chocolate"
+              aria-pressed="false"
+            >
+              <span class="swatch chocolate" aria-hidden="true">▦</span
+              ><span
+                ><strong>巧克力</strong><small>黏稠缓行 · 浮力中</small></span
+              ><span class="check">✓</span>
+            </button>
+            <button
+              class="material"
+              data-material="ketchup"
+              aria-pressed="false"
+            >
+              <span class="swatch ketchup" aria-hidden="true">●</span
+              ><span
+                ><strong>番茄酱</strong><small>快速下沉 · 浮力低</small></span
+              ><span class="check">✓</span>
+            </button>
+          </div>
+        </section>
+        <section class="panel-section">
+          <div class="section-label">
+            <h3>02 / 改造沙盘</h3>
+            <span id="brush-label">画笔 · 3 格</span>
+          </div>
+          <div class="tool-row" role="group" aria-label="沙盘工具">
+            <button data-tool="paint" class="active" aria-pressed="true">
+              ✎ 绘制</button
+            ><button data-tool="erase" aria-pressed="false">▱ 擦除</button
+            ><button data-tool="orbit" aria-pressed="false">↻ 视角</button>
+          </div>
+          <label class="slider-label" for="brush"
+            >画笔大小 <output id="brush-value">3</output></label
+          ><input id="brush" type="range" min="1" max="7" step="1" value="3" />
+          <div class="range-captions">
+            <span>细细描绘</span><span>大面积涂画</span>
+          </div>
+          <label class="slider-label" for="zoom"
+            >画面缩放 <output id="zoom-value">100%</output></label
+          ><input id="zoom" type="range" min="60" max="160" value="100" />
+        </section>
+        <section class="panel-section">
+          <div class="section-label">
+            <h3>03 / 观察小人</h3>
+            <span><b id="clone-count">0</b> / 24</span>
+          </div>
+          <button id="clone" class="clone-button" aria-pressed="false">
+            <span>♙</span> 生成克隆人 <span>＋</span>
+          </button>
+          <p class="hint" id="tool-hint">
+            左键涂画，右键擦除。试着画出一条流沙小路。
+          </p>
+          <div class="stats">
+            <div><strong id="resets">0</strong><span>玩家重生</span></div>
+            <div><strong id="coverage">0%</strong><span>流沙覆盖</span></div>
+          </div>
+        </section>
+        <div class="panel-bottom">
+          <button id="reset" class="reset-button">↺ 重置场景</button>
+          <p>清空所有流沙与克隆人，重新开始。</p>
+        </div>
+      </aside>
+    </main>
+    <footer class="page-footer">
+      <span
+        >造物档案馆
+        <span class="footer-separator">/</span> 小小沙盘，大大好奇。</span
+      ><span>纯 Canvas · 无需联网 · 自由探索</span>
+    </footer>
+  </body>
+</html>
