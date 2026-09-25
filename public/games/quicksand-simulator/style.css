@@ -367,7 +367,10 @@ kbd {
   color: #f59b78;
 }
 .cheese {
-  background: #f4c951;
+  background:
+    radial-gradient(ellipse at 29% 34%, #b47d1e 0 12%, transparent 14%),
+    radial-gradient(ellipse at 72% 60%, #b47d1e 0 16%, transparent 18%),
+    radial-gradient(ellipse at 45% 82%, #c58b22 0 8%, transparent 10%), #f4c951;
   color: #b47d1e;
 }
 .material strong {

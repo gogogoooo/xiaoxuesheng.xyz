@@ -50,7 +50,9 @@
   background: #cc6045;
 }
 .quicksand-preview__board i:nth-child(4) {
-  background: #f4c951;
+  background:
+    radial-gradient(ellipse at 32% 25%, #b47d1e 0 13%, transparent 15%),
+    radial-gradient(ellipse at 70% 63%, #b47d1e 0 18%, transparent 20%), #f4c951;
 }
 .quicksand-preview__caption {
   font-size: 12px;
