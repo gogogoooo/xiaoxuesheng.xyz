@@ -14,6 +14,9 @@
     sunflower: { name: '向日花', cost: 50, hp: 115, cooldown: 5, interval: 7 },
     wall: { name: '坚果盾', cost: 75, hp: 640, cooldown: 14 },
     bomb: { name: '爆爆果', cost: 150, hp: 150, cooldown: 18, delay: 0.8 },
+    ice: { name: '冰冻射手', cost: 125, hp: 140, cooldown: 7 },
+    spike: { name: '地刺', cost: 75, hp: 180, cooldown: 8 },
+    twin: { name: '双向射手', cost: 175, hp: 140, cooldown: 9 },
   };
   const ZOMBIES = {
     basic: { hp: 180, speed: 0.19, damage: 31 },
@@ -57,7 +60,7 @@
         used: false,
         active: false,
       })),
-      cooldowns: { shooter: 0, sunflower: 0, wall: 0, bomb: 0 },
+      cooldowns: Object.fromEntries(Object.keys(PLANTS).map((type) => [type, 0])),
       spawnsLeft: 5,
       spawnTimer: 5,
       skyTimer: 8,
@@ -120,6 +123,9 @@
     g.settings[key] = value;
     if (key === 'sunValue')
       for (const drop of g.sunDrops) drop.value = value;
+    if (key === 'specialInterval')
+      for (const plant of g.plants)
+        if (plant.type === 'ice' || plant.type === 'twin') plant.timer = value;
     return true;
   }
   function dropSun(g, x, row, value = g.settings.sunValue) {
@@ -186,6 +192,43 @@
           p.timer += PLANTS.shooter.interval;
         } else p.timer = 0.18;
       }
+      if ((p.type === 'ice' || p.type === 'twin') && p.timer <= 0) {
+        const center = p.col + 0.5;
+        const right = g.zombies.some(
+          (z) => z.row === p.row && z.x > center && z.hp > 0,
+        );
+        const left =
+          p.type === 'twin' &&
+          g.zombies.some(
+            (z) => z.row === p.row && z.x < center && z.hp > 0,
+          );
+        if (right)
+          g.shots.push({
+            id: g.nextId++,
+            row: p.row,
+            x: p.col + 0.88,
+            direction: 1,
+            damage: p.type === 'ice' ? 16 : 24,
+            slow: p.type === 'ice' ? 3 : 0,
+          });
+        if (left)
+          g.shots.push({
+            id: g.nextId++,
+            row: p.row,
+            x: p.col + 0.12,
+            direction: -1,
+            damage: 24,
+          });
+        p.timer = right || left ? g.settings.specialInterval : 0.18;
+      }
+      if (p.type === 'spike')
+        for (const z of g.zombies)
+          if (
+            z.hp > 0 &&
+            z.row === p.row &&
+            Math.abs(z.x - (p.col + 0.5)) < 0.5
+          )
+            z.hp -= 45 * dt;
       if (p.type === 'bomb' && p.timer <= 0) {
         for (const z of g.zombies)
           if (
@@ -205,25 +248,28 @@
     g.plants = g.plants.filter((p) => p.hp > 0);
     for (const shot of g.shots) {
       const oldX = shot.x;
-      shot.x += 4.6 * dt;
+      const direction = shot.direction ?? 1;
+      shot.x += direction * 4.6 * dt;
       const target = g.zombies
         .filter(
           (z) =>
             z.row === shot.row &&
             z.hp > 0 &&
-            z.x >= oldX - 0.2 &&
-            z.x <= shot.x + 0.28,
+            z.x >= Math.min(oldX, shot.x) - 0.2 &&
+            z.x <= Math.max(oldX, shot.x) + 0.28,
         )
-        .sort((a, b) => a.x - b.x)[0];
+        .sort((a, b) => direction * (a.x - b.x))[0];
       if (target) {
         target.hp -= shot.damage;
+        if (shot.slow) target.slow = Math.max(target.slow, shot.slow);
         shot.hit = true;
         g.effects.push({ type: 'hit', row: shot.row, x: target.x, ttl: 0.18 });
       }
     }
-    g.shots = g.shots.filter((s) => !s.hit && s.x < COLS + 1);
+    g.shots = g.shots.filter((s) => !s.hit && s.x > -1 && s.x < COLS + 1);
     for (const z of g.zombies) {
       if (z.hp <= 0) continue;
+      z.slow = Math.max(0, z.slow - dt);
       const target = g.plants.find(
         (p) => p.row === z.row && Math.abs(z.x - (p.col + 0.5)) < 0.42,
       );
@@ -234,7 +280,7 @@
           z.bite = 0.72;
         }
       } else {
-        z.x -= ZOMBIES[z.type].speed * dt;
+        z.x -= ZOMBIES[z.type].speed * (z.slow > 0 ? 0.5 : 1) * dt;
         z.bite = 0;
       }
       if (z.x < 0 && z.hp > 0) {

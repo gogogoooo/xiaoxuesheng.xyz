@@ -47,3 +47,72 @@ test('pea shooter fires the selected number of separate shots on later volleys',
   assert.equal(g.shots.length, 20);
   assert.equal(R.createGame(() => 0.5, g.settings).settings.volley, 16);
 });
+
+test('three new plants use their own costs and cooldowns', () => {
+  const g = game();
+  g.sun = 1000;
+  assert.equal(R.plant(g, 1, 2, 'ice'), true);
+  assert.equal(R.plant(g, 2, 2, 'spike'), true);
+  assert.equal(R.plant(g, 3, 4, 'twin'), true);
+  assert.equal(g.sun, 625);
+  assert.equal(g.cooldowns.ice, 7);
+  assert.equal(g.cooldowns.spike, 8);
+  assert.equal(g.cooldowns.twin, 9);
+  assert.equal(R.plant(g, 1, 3, 'ice'), false);
+});
+
+test('ice shot damages and slows a zombie without stacking speed penalties', () => {
+  const g = game();
+  g.sun = 1000;
+  g.spawnTimer = 1000;
+  g.skyTimer = 1000;
+  R.plant(g, 2, 1, 'ice');
+  const zombie = R.spawnZombie(g, 2, 'basic', 2.5);
+  advance(g, 0.5);
+  assert.equal(zombie.hp, 164);
+  assert.ok(zombie.slow > 2);
+  g.plants.length = 0;
+  g.shots.length = 0;
+  const before = zombie.x;
+  advance(g, 1);
+  assert.ok(before - zombie.x > 0.085 && before - zombie.x < 0.105);
+  advance(g, 3);
+  assert.equal(zombie.slow, 0);
+});
+
+test('spike damages only zombies in its own cell and row', () => {
+  const g = game();
+  g.sun = 1000;
+  g.spawnTimer = 1000;
+  g.skyTimer = 1000;
+  R.plant(g, 1, 2, 'spike');
+  const inside = R.spawnZombie(g, 1, 'basic', 2.5);
+  const otherRow = R.spawnZombie(g, 2, 'basic', 2.5);
+  const otherCell = R.spawnZombie(g, 1, 'basic', 4.5);
+  advance(g, 1);
+  assert.ok(inside.hp <= 135);
+  assert.equal(otherRow.hp, 180);
+  assert.equal(otherCell.hp, 180);
+});
+
+test('twin shooter fires left and right; shared interval speeds up ice and twin', () => {
+  const g = game();
+  g.sun = 1000;
+  g.spawnTimer = 1000;
+  g.skyTimer = 1000;
+  R.plant(g, 1, 1, 'ice');
+  R.plant(g, 2, 4, 'twin');
+  R.spawnZombie(g, 1, 'basic', 9.5);
+  R.spawnZombie(g, 2, 'basic', 0.5);
+  R.spawnZombie(g, 2, 'basic', 9.5);
+  advance(g, 0.4);
+  assert.ok(g.shots.some((s) => s.row === 2 && s.direction === -1));
+  assert.ok(g.shots.some((s) => s.row === 2 && s.direction === 1));
+  const before = g.shots.length;
+  assert.equal(R.setSetting(g, 'specialInterval', 0.25), true);
+  advance(g, 0.3);
+  assert.ok(g.shots.length > before);
+  assert.ok(g.shots.filter((s) => s.row === 1).length >= 2);
+  assert.ok(g.shots.filter((s) => s.row === 2).length >= 4);
+  assert.equal(R.createGame(() => 0.5, g.settings).settings.specialInterval, 0.25);
+});
