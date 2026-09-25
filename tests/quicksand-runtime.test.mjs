@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import { createHash } from 'node:crypto';
 
 const base = new URL('../public/games/quicksand-simulator/', import.meta.url);
 // Execute the real classic scripts with DOM/Canvas adapters. Browser visual QA is separate.
@@ -206,4 +207,18 @@ test('offline entry uses only existing relative classic scripts and styles', () 
     assert.ok(fs.existsSync(new URL(ref, base)));
   }
   assert.ok(!html.includes('type="module"'));
+});
+
+test('entry versions every game asset using their shared content hash', () => {
+  const assets = ['physics.js', 'game.js', 'style.css'];
+  const hash = createHash('sha256');
+  for (const asset of assets) hash.update(fs.readFileSync(new URL(asset, base)));
+  const version = hash.digest('hex').slice(0, 12);
+  const html = fs.readFileSync(new URL('index.html', base), 'utf8');
+  for (const asset of assets) {
+    assert.ok(
+      html.includes(`"${asset}?v=${version}"`),
+      `${asset} should use current shared asset version ${version}`,
+    );
+  }
 });
