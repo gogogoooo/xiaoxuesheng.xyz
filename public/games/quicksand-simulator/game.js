@@ -637,10 +637,11 @@
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture'])
       b.addEventListener(type, () => keys.delete(b.dataset.move));
   });
-  // The first visit includes three sample pools; reset always produces a genuinely empty board.
+  // The first visit includes four sample pools; reset always produces a genuinely empty board.
   P.paint(world, 10, 9, 3.5, 'sand');
   P.paint(world, 19, 11, 3.6, 'chocolate');
   P.paint(world, 15, 20, 3.8, 'ketchup');
+  P.paint(world, 7, 20, 3.2, 'cheese');
   new ResizeObserver(resize).observe(canvas);
   resize();
   ui();

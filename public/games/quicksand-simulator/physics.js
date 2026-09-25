@@ -29,6 +29,14 @@
       buoyancy: 0.15,
       viscosity: 0.6,
     },
+    cheese: {
+      name: '芝士',
+      color: '#f4c951',
+      dark: '#cb921e',
+      light: '#ffe38b',
+      buoyancy: 0.82,
+      viscosity: 0.34,
+    },
   };
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
   const safe = (x, z) => x >= 1 && x < 6 && z >= 1 && z < 6;

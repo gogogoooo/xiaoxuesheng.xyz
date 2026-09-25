@@ -366,6 +366,10 @@ kbd {
   background: #d75f46;
   color: #f59b78;
 }
+.cheese {
+  background: #f4c951;
+  color: #b47d1e;
+}
 .material strong {
   display: block;
   font-size: 12px;

@@ -40,6 +40,23 @@ test('material buoyancy produces ordered sinking rates', () => {
   assert.ok(worlds[0].player.depth < worlds[1].player.depth);
   assert.ok(worlds[1].player.depth < worlds[2].player.depth);
 });
+
+test('cheese can be painted and gives a distinct slow, sticky sinking feel', () => {
+  const w = P.createWorld();
+  assert.ok(P.paint(w, 14, 14, 2, 'cheese') > 0);
+  assert.equal(P.materialAt(w, 14, 14), 'cheese');
+  assert.equal(P.MATERIALS.cheese.name, '芝士');
+  const cheese = pool('cheese');
+  const sand = pool('sand');
+  const chocolate = pool('chocolate');
+  simulate(cheese, 1, { x: 1, z: 0 });
+  simulate(sand, 1, { x: 1, z: 0 });
+  simulate(chocolate, 1, { x: 1, z: 0 });
+  assert.ok(cheese.player.depth > 0);
+  assert.ok(cheese.player.depth < sand.player.depth);
+  assert.ok(cheese.player.x < sand.player.x);
+  assert.ok(cheese.player.x > chocolate.player.x);
+});
 test('struggling slows sinking but does not stop it', () => {
   const idle = pool('sand'),
     moving = pool('sand');
