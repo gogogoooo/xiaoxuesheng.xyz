@@ -19,12 +19,31 @@
     basic: { hp: 180, speed: 0.19, damage: 31 },
     cone: { hp: 370, speed: 0.16, damage: 31 },
   };
+  const SETTING_OPTIONS = {
+    sunValue: [25, 50, 100, 200, 500],
+    volley: [1, 2, 4, 8, 16],
+    specialInterval: [0.25, 0.5, 1, 1.5, 2],
+  };
   const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-  function createGame(random = Math.random) {
+  function createGame(random = Math.random, savedSettings = {}) {
+    const settings = {
+      sunValue: SETTING_OPTIONS.sunValue.includes(savedSettings.sunValue)
+        ? savedSettings.sunValue
+        : 25,
+      volley: SETTING_OPTIONS.volley.includes(savedSettings.volley)
+        ? savedSettings.volley
+        : 1,
+      specialInterval: SETTING_OPTIONS.specialInterval.includes(
+        savedSettings.specialInterval,
+      )
+        ? savedSettings.specialInterval
+        : 1.5,
+    };
     return {
       status: 'playing',
       time: 0,
       random,
+      settings,
       sun: 150,
       wave: 1,
       plants: [],
@@ -96,7 +115,14 @@
     g.zombies.push(z);
     return z;
   }
-  function dropSun(g, x, row, value = 25) {
+  function setSetting(g, key, value) {
+    if (!SETTING_OPTIONS[key]?.includes(value)) return false;
+    g.settings[key] = value;
+    if (key === 'sunValue')
+      for (const drop of g.sunDrops) drop.value = value;
+    return true;
+  }
+  function dropSun(g, x, row, value = g.settings.sunValue) {
     const drop = { id: g.nextId++, x, row, value, ttl: 12, age: 0 };
     g.sunDrops.push(drop);
     return drop;
@@ -141,7 +167,7 @@
     for (const p of g.plants) {
       p.timer -= dt;
       if (p.type === 'sunflower' && p.timer <= 0) {
-        dropSun(g, p.col + 0.5, p.row, 25);
+        dropSun(g, p.col + 0.5, p.row);
         p.timer += PLANTS.sunflower.interval;
       }
       if (p.type === 'shooter' && p.timer <= 0) {
@@ -150,12 +176,13 @@
             (z) => z.row === p.row && z.x > p.col + 0.5 && z.hp > 0,
           )
         ) {
-          g.shots.push({
-            id: g.nextId++,
-            row: p.row,
-            x: p.col + 0.88,
-            damage: 24,
-          });
+          for (let i = 0; i < g.settings.volley; i++)
+            g.shots.push({
+              id: g.nextId++,
+              row: p.row,
+              x: p.col + 0.88 - i * 0.035,
+              damage: 24,
+            });
           p.timer += PLANTS.shooter.interval;
         } else p.timer = 0.18;
       }
@@ -259,7 +286,9 @@
     COLS,
     PLANTS,
     ZOMBIES,
+    SETTING_OPTIONS,
     createGame,
+    setSetting,
     plant,
     shovel,
     spawnZombie,
