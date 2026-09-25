@@ -56,6 +56,149 @@
               </button>
             </div>
           </div>
+          <details id="settings-panel" class="settings-panel">
+            <summary>⚙ 游戏设置 <span>调整阳光与攻击</span></summary>
+            <div class="settings-grid">
+              <fieldset class="setting-group">
+                <legend>每朵阳光</legend>
+                <div class="setting-options">
+                  <button
+                    type="button"
+                    data-setting="sunValue"
+                    data-value="25"
+                    aria-pressed="true"
+                  >
+                    25
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="sunValue"
+                    data-value="50"
+                    aria-pressed="false"
+                  >
+                    50
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="sunValue"
+                    data-value="100"
+                    aria-pressed="false"
+                  >
+                    100
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="sunValue"
+                    data-value="200"
+                    aria-pressed="false"
+                  >
+                    200
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="sunValue"
+                    data-value="500"
+                    aria-pressed="false"
+                  >
+                    500
+                  </button>
+                </div>
+              </fieldset>
+              <fieldset class="setting-group">
+                <legend>豆豆射手每轮连发</legend>
+                <div class="setting-options">
+                  <button
+                    type="button"
+                    data-setting="volley"
+                    data-value="1"
+                    aria-pressed="true"
+                  >
+                    1 发
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="volley"
+                    data-value="2"
+                    aria-pressed="false"
+                  >
+                    2 发
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="volley"
+                    data-value="4"
+                    aria-pressed="false"
+                  >
+                    4 发
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="volley"
+                    data-value="8"
+                    aria-pressed="false"
+                  >
+                    8 发
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="volley"
+                    data-value="16"
+                    aria-pressed="false"
+                  >
+                    16 发
+                  </button>
+                </div>
+              </fieldset>
+              <fieldset class="setting-group">
+                <legend>冰冻／双向射手攻击间隔</legend>
+                <div class="setting-options">
+                  <button
+                    type="button"
+                    data-setting="specialInterval"
+                    data-value="0.25"
+                    aria-pressed="false"
+                  >
+                    0.25 秒
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="specialInterval"
+                    data-value="0.5"
+                    aria-pressed="false"
+                  >
+                    0.5 秒
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="specialInterval"
+                    data-value="1"
+                    aria-pressed="false"
+                  >
+                    1 秒
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="specialInterval"
+                    data-value="1.5"
+                    aria-pressed="true"
+                  >
+                    1.5 秒
+                  </button>
+                  <button
+                    type="button"
+                    data-setting="specialInterval"
+                    data-value="2"
+                    aria-pressed="false"
+                  >
+                    2 秒
+                  </button>
+                </div>
+              </fieldset>
+            </div>
+            <p class="settings-help">
+              调整立即作用于当前游戏；重新开始仍保留你的选择。
+            </p>
+          </details>
           <div class="deck" role="group" aria-label="选择植物">
             <button
               class="plant-card selected"
@@ -93,6 +236,27 @@
                 ><b>☀ 150</b></span
               ><i class="cooldown"></i>
             </button>
+            <button class="plant-card" data-plant="ice" aria-pressed="false">
+              <span class="plant-icon ice">❄</span
+              ><span
+                ><strong>冰冻射手</strong><small>让小怪物慢下来</small
+                ><b>☀ 125</b></span
+              ><i class="cooldown"></i>
+            </button>
+            <button class="plant-card" data-plant="spike" aria-pressed="false">
+              <span class="plant-icon spike">✦</span
+              ><span
+                ><strong>地刺</strong><small>靠近就会被扎到</small
+                ><b>☀ 75</b></span
+              ><i class="cooldown"></i>
+            </button>
+            <button class="plant-card" data-plant="twin" aria-pressed="false">
+              <span class="plant-icon twin">✿</span
+              ><span
+                ><strong>双向射手</strong><small>左右两边都能守</small
+                ><b>☀ 175</b></span
+              ><i class="cooldown"></i>
+            </button>
             <button
               id="shovel"
               class="shovel-card"
@@ -127,7 +291,7 @@
               >
             </div>
             <span class="controls-hint"
-              ><kbd>1</kbd>–<kbd>4</kbd> 选植物　 <kbd>空格</kbd> 暂停　
+              ><kbd>1</kbd>–<kbd>7</kbd> 选植物　 <kbd>空格</kbd> 暂停　
               <kbd>R</kbd> 重来</span
             >
           </div>

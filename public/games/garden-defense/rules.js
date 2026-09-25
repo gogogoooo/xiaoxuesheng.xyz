@@ -60,7 +60,9 @@
         used: false,
         active: false,
       })),
-      cooldowns: Object.fromEntries(Object.keys(PLANTS).map((type) => [type, 0])),
+      cooldowns: Object.fromEntries(
+        Object.keys(PLANTS).map((type) => [type, 0]),
+      ),
       spawnsLeft: 5,
       spawnTimer: 5,
       skyTimer: 8,
@@ -121,8 +123,7 @@
   function setSetting(g, key, value) {
     if (!SETTING_OPTIONS[key]?.includes(value)) return false;
     g.settings[key] = value;
-    if (key === 'sunValue')
-      for (const drop of g.sunDrops) drop.value = value;
+    if (key === 'sunValue') for (const drop of g.sunDrops) drop.value = value;
     if (key === 'specialInterval')
       for (const plant of g.plants)
         if (plant.type === 'ice' || plant.type === 'twin') plant.timer = value;
@@ -199,9 +200,7 @@
         );
         const left =
           p.type === 'twin' &&
-          g.zombies.some(
-            (z) => z.row === p.row && z.x < center && z.hp > 0,
-          );
+          g.zombies.some((z) => z.row === p.row && z.x < center && z.hp > 0);
         if (right)
           g.shots.push({
             id: g.nextId++,

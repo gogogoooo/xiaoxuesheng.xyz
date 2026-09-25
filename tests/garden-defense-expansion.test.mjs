@@ -114,5 +114,32 @@ test('twin shooter fires left and right; shared interval speeds up ice and twin'
   assert.ok(g.shots.length > before);
   assert.ok(g.shots.filter((s) => s.row === 1).length >= 2);
   assert.ok(g.shots.filter((s) => s.row === 2).length >= 4);
-  assert.equal(R.createGame(() => 0.5, g.settings).settings.specialInterval, 0.25);
+  assert.equal(
+    R.createGame(() => 0.5, g.settings).settings.specialInterval,
+    0.25,
+  );
+});
+
+test('offline page exposes compact layout, seven plants, and three setting groups', () => {
+  const html = fs.readFileSync(new URL('index.html', gameDir), 'utf8');
+  const css = fs.readFileSync(new URL('style.css', gameDir), 'utf8');
+  const ui = fs.readFileSync(new URL('game.js', gameDir), 'utf8');
+  for (const type of [
+    'shooter',
+    'sunflower',
+    'wall',
+    'bomb',
+    'ice',
+    'spike',
+    'twin',
+  ])
+    assert.match(html, new RegExp(`data-plant="${type}"`));
+  for (const key of ['sunValue', 'volley', 'specialInterval'])
+    assert.match(html, new RegExp(`data-setting="${key}"`));
+  assert.match(html, /id="settings-panel"/);
+  assert.match(html, /data-setting="specialInterval"\s+data-value="0\.25"/);
+  assert.match(css, /max-width:\s*1240px/);
+  assert.match(css, /min-width:\s*650px/);
+  assert.match(ui, /R\.setSetting\(game,/);
+  assert.match(ui, /R\.createGame\(Math\.random, game\.settings\)/);
 });

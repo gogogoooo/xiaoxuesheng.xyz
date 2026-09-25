@@ -15,6 +15,8 @@
     CW = 92,
     CH = 76;
   const cards = [...document.querySelectorAll('[data-plant]')];
+  const settingsPanel = $('settings-panel');
+  const settingButtons = [...settingsPanel.querySelectorAll('[data-setting]')];
   let game = R.createGame(),
     selected = 'shooter',
     hover = null;
@@ -216,6 +218,47 @@
         line(x - 8, y + 7, x - 4, y + 14, '#835f46', 2);
         line(x - 4, y + 14, x - 10, y + 19, '#835f46', 2);
       }
+    } else if (p.type === 'ice') {
+      line(x, y + 22, x, y - 5, '#5b9ea6', 7);
+      leaf(x - 3, y + 11, 2.7, '#72b8b0', 0.66);
+      circle(x - 4, y - 14, 21, '#8fd4e5', '#579eb8', 2);
+      round(x + 11, y - 21, 21, 14, 6, '#61b0c6');
+      circle(x + 29, y - 14, 6, '#4599b1');
+      circle(x - 9, y - 19, 2, '#2f637b');
+      for (let i = 0; i < 5; i++) {
+        const a = (i * Math.PI * 2) / 5;
+        line(
+          x - 4,
+          y - 14,
+          x - 4 + Math.cos(a) * 17,
+          y - 14 + Math.sin(a) * 17,
+          '#dffaff',
+          1.5,
+        );
+      }
+    } else if (p.type === 'spike') {
+      ellipse(x, y + 19, 30, 12, '#8d865c');
+      for (let i = -2; i <= 2; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x + i * 11 - 7, y + 20);
+        ctx.lineTo(x + i * 11, y - 8 - (i % 2 === 0 ? 8 : 0));
+        ctx.lineTo(x + i * 11 + 7, y + 20);
+        ctx.closePath();
+        ctx.fillStyle = i % 2 === 0 ? '#9b7b55' : '#b89665';
+        ctx.fill();
+      }
+    } else if (p.type === 'twin') {
+      line(x, y + 23, x, y - 8, '#4f9653', 8);
+      leaf(x - 3, y + 13, 2.7, '#5dae65', 0.7);
+      leaf(x + 3, y + 17, -0.3, '#78bd6f', 0.7);
+      circle(x - 13, y - 16, 17, '#6db96c', '#448c53', 2);
+      circle(x + 13, y - 16, 17, '#6db96c', '#448c53', 2);
+      round(x - 36, y - 22, 20, 13, 6, '#458e50');
+      round(x + 16, y - 22, 20, 13, 6, '#458e50');
+      circle(x - 37, y - 15, 5, '#397c45');
+      circle(x + 37, y - 15, 5, '#397c45');
+      circle(x - 10, y - 20, 2, '#2d5938');
+      circle(x + 10, y - 20, 2, '#2d5938');
     } else {
       line(x, y + 20, x, y - 6, '#3e7d43', 6);
       leaf(x - 3, y + 10, 2.5, '#5d9c52', 0.55);
@@ -264,6 +307,10 @@
       round(-17, -51, 34, 10, 5, '#765f65');
     }
     ctx.restore();
+    if (z.slow > 0) {
+      circle(x, y - 29, 22, null, '#a8e4f5', 3);
+      circle(x + 15, y - 45, 3, '#e4faff');
+    }
     if (z.hp < R.ZOMBIES[z.type].hp * 0.75) {
       round(x - 17, y - 61, 34, 4, 2, '#48624988');
       round(
@@ -336,8 +383,15 @@
     for (const shot of game.shots) {
       const x = X + shot.x * CW,
         y = Y + (shot.row + 0.5) * CH - 13;
-      circle(x, y, 8, '#a4d879', '#4f9954', 1);
-      circle(x - 2, y - 3, 2, '#dbf7aa');
+      circle(
+        x,
+        y,
+        8,
+        shot.slow ? '#b9e8f5' : '#a4d879',
+        shot.slow ? '#66afc9' : '#4f9954',
+        1,
+      );
+      circle(x - 2, y - 3, 2, '#effffd');
     }
     for (const d of game.sunDrops) drawSun(d);
     for (const e of game.effects) {
@@ -369,6 +423,14 @@
     });
     $('shovel').classList.toggle('selected', type === 'shovel');
     $('shovel').setAttribute('aria-pressed', type === 'shovel');
+  }
+  function updateSettingsButtons() {
+    settingButtons.forEach((button) => {
+      button.setAttribute(
+        'aria-pressed',
+        Number(button.dataset.value) === game.settings[button.dataset.setting],
+      );
+    });
   }
   function say(message) {
     notice = message;
@@ -476,6 +538,16 @@
   cards.forEach((card) =>
     card.addEventListener('click', () => choose(card.dataset.plant)),
   );
+  settingsPanel.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-setting][data-value]');
+    if (!button || !settingsPanel.contains(button)) return;
+    const key = button.dataset.setting;
+    const value = Number(button.dataset.value);
+    if (R.setSetting(game, key, value)) {
+      updateSettingsButtons();
+      say('游戏设置已更新。');
+    }
+  });
   $('shovel').addEventListener('click', () => choose('shovel'));
   function togglePause() {
     if (game.status === 'won' || game.status === 'lost') return;
@@ -486,7 +558,7 @@
     say(game.status === 'paused' ? '游戏暂停了，休息一下。' : '继续守护花园！');
   }
   function restart() {
-    game = R.createGame();
+    game = R.createGame(Math.random, game.settings);
     elapsed = 0;
     lastWave = 1;
     lastStatus = 'playing';
@@ -494,6 +566,7 @@
     $('pause').innerHTML = 'Ⅱ <span>暂停</span>';
     $('pause').setAttribute('aria-pressed', 'false');
     choose('shooter');
+    updateSettingsButtons();
     say('新的花园准备好了，开始种植物吧。');
     updateHUD();
   }
@@ -502,8 +575,12 @@
   $('play-again').addEventListener('click', restart);
   document.addEventListener('keydown', (e) => {
     if (e.target.matches('button,input,textarea,select')) return;
-    if (['1', '2', '3', '4'].includes(e.key)) {
-      choose(['shooter', 'sunflower', 'wall', 'bomb'][Number(e.key) - 1]);
+    if (['1', '2', '3', '4', '5', '6', '7'].includes(e.key)) {
+      choose(
+        ['shooter', 'sunflower', 'wall', 'bomb', 'ice', 'spike', 'twin'][
+          Number(e.key) - 1
+        ],
+      );
       say(`已选择${R.PLANTS[selected].name}。`);
     }
     if (e.code === 'Space') {
@@ -520,6 +597,7 @@
     last = performance.now();
   });
   choose('shooter');
+  updateSettingsButtons();
   updateHUD();
   requestAnimationFrame(loop);
 })();
