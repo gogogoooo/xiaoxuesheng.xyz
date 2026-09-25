@@ -212,7 +212,8 @@ test('offline entry uses only existing relative classic scripts and styles', () 
 test('entry versions every game asset using their shared content hash', () => {
   const assets = ['physics.js', 'game.js', 'style.css'];
   const hash = createHash('sha256');
-  for (const asset of assets) hash.update(fs.readFileSync(new URL(asset, base)));
+  for (const asset of assets)
+    hash.update(fs.readFileSync(new URL(asset, base), 'utf8').replaceAll('\r\n', '\n'));
   const version = hash.digest('hex').slice(0, 12);
   const html = fs.readFileSync(new URL('index.html', base), 'utf8');
   for (const asset of assets) {
