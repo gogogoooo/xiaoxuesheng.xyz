@@ -51,7 +51,7 @@ export default function AppsPage() {
             <p className="app-demo-card__eyebrow">02 · 离线沙盒小游戏</p>
             <h2 id="quicksand-title">流沙模拟器</h2>
             <p>
-              画一片黄沙、巧克力或番茄酱，让方块小人走进去。旋转沙盘、放置克隆人，观察不同材质的下沉效果，自由玩一场没有输赢的小实验。
+              画一片黄沙、巧克力、番茄酱或芝士流沙，让方块小人走进去。旋转沙盘、放置克隆人，观察不同材质的下沉效果，自由玩一场没有输赢的小实验。
             </p>
             <p className="app-demo-card__hint">
               WASD 移动 · 自由涂画 · 伪 3D 视角 · 支持离线
@@ -72,6 +72,7 @@ export default function AppsPage() {
               QUICKSAND LAB / 001
             </span>
             <span className="quicksand-preview__board" aria-hidden="true">
+              <i />
               <i />
               <i />
               <i />

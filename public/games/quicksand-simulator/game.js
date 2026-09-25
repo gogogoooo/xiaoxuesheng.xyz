@@ -171,6 +171,34 @@
               ? '#dfd3b4'
               : '#e2d6b8';
         tile(x, z, 1.01, 1.01, 0, color, null, target);
+        if (material === 'cheese' && (x * 7 + z * 11) % 3 === 0) {
+          const center = projection(x + 0.5, z + 0.5, 0.025);
+          const radius = Math.max(2, scale * (0.18 + ((x + z) % 3) * 0.035));
+          target.beginPath();
+          target.ellipse(
+            center.x,
+            center.y,
+            radius + 1,
+            radius * 0.58 + 1,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          target.fillStyle = '#ffe38b';
+          target.fill();
+          target.beginPath();
+          target.ellipse(
+            center.x + 0.7,
+            center.y + 0.7,
+            radius,
+            radius * 0.58,
+            0,
+            0,
+            Math.PI * 2,
+          );
+          target.fillStyle = '#b47d1e';
+          target.fill();
+        }
         if (m && (x * 7 + z * 11) % 4 === 0) {
           const p = projection(x + 0.35, z + 0.53, 0.016);
           target.fillStyle = tint(m.color, 22);
@@ -637,10 +665,11 @@
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture'])
       b.addEventListener(type, () => keys.delete(b.dataset.move));
   });
-  // The first visit includes three sample pools; reset always produces a genuinely empty board.
+  // The first visit includes four sample pools; reset always produces a genuinely empty board.
   P.paint(world, 10, 9, 3.5, 'sand');
   P.paint(world, 19, 11, 3.6, 'chocolate');
   P.paint(world, 15, 20, 3.8, 'ketchup');
+  P.paint(world, 7, 20, 3.2, 'cheese');
   new ResizeObserver(resize).observe(canvas);
   resize();
   ui();

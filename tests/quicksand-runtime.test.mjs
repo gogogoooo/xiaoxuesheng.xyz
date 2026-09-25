@@ -8,12 +8,22 @@ const base = new URL('../public/games/quicksand-simulator/', import.meta.url);
 function boot() {
   let frame,
     drawCalls = 0;
+  const paintedEllipses = [];
   const context2d = new Proxy(
     {},
     {
       get(target, key) {
         if (key in target) return target[key];
         return (...args) => {
+          if (key === 'beginPath') target.pendingEllipse = null;
+          if (key === 'ellipse') target.pendingEllipse = args;
+          if (key === 'fill' && target.pendingEllipse) {
+            paintedEllipses.push({
+              color: target.fillStyle,
+              args: target.pendingEllipse,
+            });
+            target.pendingEllipse = null;
+          }
           if (['lineTo', 'moveTo', 'fillRect', 'ellipse'].includes(key)) {
             assert.ok(
               args.filter((v) => typeof v === 'number').every(Number.isFinite),
@@ -63,8 +73,8 @@ function boot() {
     '[data-tool]': ['paint', 'erase', 'orbit'].map((tool) =>
       element(tool, { tool }),
     ),
-    '[data-material]': ['sand', 'chocolate', 'ketchup'].map((material) =>
-      element(material, { material }),
+    '[data-material]': [...html.matchAll(/data-material="([^"]+)"/g)].map(
+      ([, material]) => element(material, { material }),
     ),
     '[data-move]': ['w', 'a', 's', 'd'].map((move) => element(move, { move })),
   };
@@ -103,6 +113,8 @@ function boot() {
       }
     },
     draws: () => drawCalls,
+    cheeseHoles: () =>
+      paintedEllipses.filter((item) => item.color === '#b47d1e').length,
     event(id, type, options = {}) {
       elements[id].handlers[type]({
         preventDefault() {},
@@ -137,6 +149,31 @@ test('classic scripts initialize, render finite geometry, place clones and reset
   app.event('world', 'pointerup');
   app.tick(10);
   assert.equal(app.elements.coverage.textContent, '0%');
+});
+
+test('cheese button selects the material and draws its pool', () => {
+  const app = boot();
+  const cheese = app.groups['[data-material]'].find(
+    (button) => button.dataset.material === 'cheese',
+  );
+  assert.ok(cheese, '芝士材质按钮应显示在面板中');
+  cheese.handlers.click();
+  assert.equal(cheese.attrs['aria-pressed'], true);
+  app.event('reset', 'click');
+  app.event('world', 'pointerdown', { clientX: 450, clientY: 416 });
+  app.event('world', 'pointerup');
+  app.tick(10);
+  assert.notEqual(app.elements.coverage.textContent, '0%');
+});
+
+test('cheese surface has visible holes that disappear when the pool is erased', () => {
+  const app = boot();
+  app.tick();
+  const initialHoles = app.cheeseHoles();
+  assert.ok(initialHoles > 0, '初始芝士流沙应绘出洞洞');
+  app.event('reset', 'click');
+  app.tick();
+  assert.equal(app.cheeseHoles(), initialHoles, '重置后不应继续绘制洞洞');
 });
 
 test('camera, help and pause UI remain operable', () => {
