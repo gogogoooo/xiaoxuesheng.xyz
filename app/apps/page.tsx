@@ -81,6 +81,41 @@ export default function AppsPage() {
             </span>
           </a>
         </section>
+        <section
+          className="app-demo-card garden-demo-card"
+          aria-labelledby="garden-defense-title"
+        >
+          <div className="app-demo-card__copy">
+            <p className="app-demo-card__eyebrow">03 · 离线策略小游戏</p>
+            <h2 id="garden-defense-title">花园防线</h2>
+            <p>
+              收集阳光，种下豆豆射手、向日花、坚果盾和爆爆果。在五行草坪上布置自己的防线，守住三波小怪物。
+            </p>
+            <p className="app-demo-card__hint">
+              种植塔防 · 原创卡通画风 · 支持离线
+            </p>
+            <a className="app-demo-card__link" href="/games/garden-defense/">
+              进入花园 <ArrowUpRight aria-hidden="true" size={18} />
+            </a>
+          </div>
+          <a
+            className="garden-preview"
+            href="/games/garden-defense/"
+            aria-label="开始玩花园防线"
+          >
+            <span className="garden-preview__eyebrow">
+              GARDEN DEFENSE / 002
+            </span>
+            <span className="garden-preview__scene" aria-hidden="true">
+              <i className="garden-preview__sun">☀</i>
+              <i className="garden-preview__flower">✿</i>
+              <i className="garden-preview__creature">◕</i>
+            </span>
+            <span className="garden-preview__caption">
+              一格草坪，一场冒险。 ↗
+            </span>
+          </a>
+        </section>
       </main>
     </SiteShell>
   );

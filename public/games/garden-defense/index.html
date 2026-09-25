@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1eedf" />
+    <title>花园防线 · 造物档案馆</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="rules.js"></script>
+    <script defer src="game.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="masthead">
+        <div class="brand">
+          <div class="brand-symbol" aria-hidden="true">✿</div>
+          <div>
+            <span class="overline">造物档案馆 / 游戏实验 02</span>
+            <h1>花园防线</h1>
+          </div>
+        </div>
+        <div class="masthead-right">
+          <span class="offline"><i></i> 单机离线</span
+          ><a class="back" href="../../apps.html">返回作品集 ↗</a>
+        </div>
+      </header>
+      <main>
+        <div class="intro">
+          <div>
+            <p class="eyebrow">A LITTLE GARDEN. A BIG ADVENTURE.</p>
+            <h2>守住花园，<em>等一朵花开。</em></h2>
+            <p>收集阳光，布置植物。挡住三波从右边来的小怪物。</p>
+          </div>
+          <div class="roundel" aria-hidden="true">
+            <span>☀</span><small>把阳光种进土里</small>
+          </div>
+        </div>
+        <section class="game-frame" aria-label="花园防线游戏">
+          <div class="hud">
+            <div class="sun-meter" aria-live="polite">
+              <span>☀</span>
+              <div>
+                <small>阳光能量</small><strong id="sun-count">150</strong>
+              </div>
+            </div>
+            <div class="wave-meter">
+              <small>当前进度</small
+              ><strong id="wave-label">第 1 / 3 波</strong>
+              <div class="wave-track"><span id="wave-progress"></span></div>
+            </div>
+            <div class="hud-actions">
+              <button id="pause" type="button" aria-pressed="false">
+                Ⅱ <span>暂停</span></button
+              ><button id="restart" type="button">
+                ↺ <span>重新开始</span>
+              </button>
+            </div>
+          </div>
+          <div class="deck" role="group" aria-label="选择植物">
+            <button
+              class="plant-card selected"
+              data-plant="shooter"
+              aria-pressed="true"
+            >
+              <span class="plant-icon shooter">✿</span
+              ><span
+                ><strong>豆豆射手</strong><small>向前发射豆豆</small
+                ><b>☀ 100</b></span
+              ><i class="cooldown"></i>
+            </button>
+            <button
+              class="plant-card"
+              data-plant="sunflower"
+              aria-pressed="false"
+            >
+              <span class="plant-icon sunflower">✺</span
+              ><span
+                ><strong>向日花</strong><small>慢慢生产阳光</small
+                ><b>☀ 50</b></span
+              ><i class="cooldown"></i>
+            </button>
+            <button class="plant-card" data-plant="wall" aria-pressed="false">
+              <span class="plant-icon wall">◕</span
+              ><span
+                ><strong>坚果盾</strong><small>挡住小怪物</small
+                ><b>☀ 75</b></span
+              ><i class="cooldown"></i>
+            </button>
+            <button class="plant-card" data-plant="bomb" aria-pressed="false">
+              <span class="plant-icon bomb">✸</span
+              ><span
+                ><strong>爆爆果</strong><small>炸开附近敌人</small
+                ><b>☀ 150</b></span
+              ><i class="cooldown"></i>
+            </button>
+            <button
+              id="shovel"
+              class="shovel-card"
+              type="button"
+              aria-pressed="false"
+            >
+              <span>♧</span><strong>小铲子</strong><small>移走植物</small>
+            </button>
+          </div>
+          <div class="board-scroller">
+            <div class="board-wrap">
+              <canvas
+                id="board"
+                width="1000"
+                height="560"
+                tabindex="0"
+                aria-label="五行九列花园；选择植物后点击草坪种植；点击阳光收集"
+              ></canvas>
+              <div id="result" class="result" hidden>
+                <span id="result-icon">✿</span>
+                <h2 id="result-title">守住了花园！</h2>
+                <p id="result-description">三波小怪物都退下了，辛苦啦。</p>
+                <button id="play-again" type="button">再玩一次 →</button>
+              </div>
+            </div>
+          </div>
+          <div class="game-bottom">
+            <div class="status">
+              <span class="status-dot"></span
+              ><span id="status-text" aria-live="polite"
+                >先选植物，再点击草坪种下它。</span
+              >
+            </div>
+            <span class="controls-hint"
+              ><kbd>1</kbd>–<kbd>4</kbd> 选植物　 <kbd>空格</kbd> 暂停　
+              <kbd>R</kbd> 重来</span
+            >
+          </div>
+        </section>
+        <div class="below">
+          <span>☘ 每一格花园，都等你来守护。</span
+          ><span>纯 HTML + JavaScript + Canvas · 无需联网</span>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

@@ -1,6 +1,73 @@
 .quicksand-demo-card {
   margin-top: 24px;
 }
+.garden-demo-card {
+  margin-top: 24px;
+}
+.garden-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+  padding: 22px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #dfeacc;
+  color: #3f6849;
+  text-decoration: none;
+}
+.garden-preview__eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 1;
+}
+.garden-preview__scene {
+  height: 144px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 12px;
+  position: relative;
+  border-bottom: 12px solid #80ab66;
+  background: linear-gradient(
+    transparent 57%,
+    #b7d898 57%,
+    #b7d898 78%,
+    #8cbe71 78%
+  );
+  border-radius: 9px;
+}
+.garden-preview__scene i {
+  font-style: normal;
+  display: grid;
+  place-items: center;
+  flex: none;
+}
+.garden-preview__sun {
+  color: #f5c957;
+  font-size: 42px;
+  position: absolute;
+  right: 24px;
+  top: 5px;
+}
+.garden-preview__flower {
+  color: #d8a446;
+  font-size: 67px;
+  line-height: 1;
+  text-shadow: 0 7px 0 #668c55;
+}
+.garden-preview__creature {
+  color: #638875;
+  font-size: 50px;
+  line-height: 1;
+  text-shadow: 0 7px 0 #4c6755;
+}
+.garden-preview__caption {
+  font-size: 12px;
+  position: relative;
+  z-index: 1;
+}
 .quicksand-preview {
   position: relative;
   display: flex;
