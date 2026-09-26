@@ -143,3 +143,9 @@ test('offline page exposes compact layout, seven plants, and three setting group
   assert.match(ui, /R\.setSetting\(game,/);
   assert.match(ui, /R\.createGame\(Math\.random, game\.settings\)/);
 });
+
+test('site entry describes the expanded seven-plant game', () => {
+  const apps = fs.readFileSync(new URL('../app/apps/page.tsx', import.meta.url), 'utf8');
+  assert.match(apps, /七种植物/);
+  assert.match(apps, /\/games\/garden-defense\//);
+});

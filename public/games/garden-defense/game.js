@@ -22,12 +22,10 @@
     hover = null;
   let last = 0,
     elapsed = 0,
-    announceAt = 0,
-    notice = '先选植物，再点击草坪种下它。';
+    announceAt = 0;
   let lastWave = 1,
     lastStatus = 'playing';
   const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const rand = (a, b) => a + Math.random() * (b - a);
   function line(x1, y1, x2, y2, color, width = 1) {
     ctx.beginPath();
     ctx.moveTo(x1, y1);
@@ -87,14 +85,6 @@
     ctx.fill();
     ctx.restore();
   }
-  function seed() {
-    let value = 0;
-    return () => {
-      value = (value * 1664525 + 1013904223) >>> 0;
-      return value / 4294967296;
-    };
-  }
-  const fieldRandom = seed();
   function drawBackdrop() {
     const sky = ctx.createLinearGradient(0, 0, 0, H);
     sky.addColorStop(0, '#d5e9cd');
@@ -433,7 +423,6 @@
     });
   }
   function say(message) {
-    notice = message;
     announceAt = elapsed + 3;
     $('status-text').textContent = message;
   }
@@ -474,7 +463,7 @@
         : '点击阳光收集；选植物后点空格种植。';
   }
   function loop(now) {
-    let dt = Math.min((now - last) / 1000 || 0, 0.05);
+    const dt = Math.min((now - last) / 1000 || 0, 0.05);
     last = now;
     elapsed += dt;
     R.tick(game, dt);

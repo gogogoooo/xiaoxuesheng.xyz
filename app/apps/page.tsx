@@ -90,7 +90,7 @@ export default function AppsPage() {
             <p className="app-demo-card__eyebrow">03 · 离线策略小游戏</p>
             <h2 id="garden-defense-title">花园防线</h2>
             <p>
-              收集阳光，种下豆豆射手、向日花、坚果盾和爆爆果。在五行草坪上布置自己的防线，守住三波小怪物。
+              收集阳光，用七种植物布置自己的防线；还能调整阳光与射手的攻击方式，在五行草坪上守住三波小怪物。
             </p>
             <p className="app-demo-card__hint">
               种植塔防 · 原创卡通画风 · 支持离线
