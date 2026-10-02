@@ -39,12 +39,13 @@ test('首页其余两个作品入口都有落地页', () => {
   assert.ok(fs.existsSync('app/works/page.tsx'));
 });
 
-test('小程序页提供车辆调度演示入口与体验版二维码', () => {
+test('小程序页保留新旧车辆调度入口，移除旧版二维码展示', () => {
   const source = fs.readFileSync(new URL('../app/apps/page.tsx', import.meta.url), 'utf8');
 
   assert.match(source, /\/demos\/vehicle-dispatch\//);
-  assert.match(source, /vehicle-dispatch-experience-qr\.png/);
-  assert.match(source, /体验版/);
+  assert.match(source, /\/demos\/vehicle-dispatch-v3\//);
+  assert.doesNotMatch(source, /vehicle-dispatch-experience-qr|扫码体验|截至 9 月/);
+  assert.ok(fs.existsSync('public/demos/vehicle-dispatch-v3/index.html'));
   assert.ok(fs.existsSync('public/demos/vehicle-dispatch/index.html'));
   assert.ok(fs.existsSync('public/vehicle-dispatch-experience-qr.png'));
 });

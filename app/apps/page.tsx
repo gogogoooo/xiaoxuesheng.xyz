@@ -1,4 +1,4 @@
-import { ArrowUpRight, ScanLine } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { SiteShell } from '@/components/site-shell';
 
 export default function AppsPage() {
@@ -34,7 +34,7 @@ export default function AppsPage() {
           </div>
         </section>
         <section
-          className="app-demo-card"
+          className="app-demo-card vehicle-dispatch-v1-card"
           aria-labelledby="vehicle-dispatch-title"
         >
           <div className="app-demo-card__copy">
@@ -50,16 +50,6 @@ export default function AppsPage() {
               打开在线演示 <ArrowUpRight aria-hidden="true" size={18} />
             </a>
           </div>
-          <aside className="app-demo-card__qr" aria-label="小程序体验版二维码">
-            <div className="app-demo-card__qr-title">
-              <ScanLine aria-hidden="true" size={17} /> 扫码体验
-            </div>
-            <img
-              src="/vehicle-dispatch-experience-qr.png"
-              alt="行序车辆调度小程序体验版二维码"
-            />
-            <p>体验版 · 截至 9 月 19 日有效</p>
-          </aside>
         </section>
         <section
           className="app-demo-card quicksand-demo-card"
