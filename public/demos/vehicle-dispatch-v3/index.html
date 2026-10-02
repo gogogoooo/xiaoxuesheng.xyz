@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>车辆调度 Demo V3.0</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="refinements.css">
+</head>
+<body>
+  <section class="phone" aria-label="车辆调度微信小程序演示">
+    <div class="statusbar"><span id="clock">09:41</span><span class="status-icons" aria-label="信号、电量"><i class="signal"></i><i class="wifi"></i><i class="battery"></i></span></div>
+    <header id="header"></header>
+    <main id="app" aria-live="polite"></main>
+    <nav id="nav" aria-label="主导航"></nav>
+    <div class="home-indicator"></div>
+    <div id="toast" role="status"></div>
+    <dialog id="sheet"></dialog>
+  </section>
+  <script src="data.js"></script>
+  <script src="model.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

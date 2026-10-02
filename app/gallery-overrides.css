@@ -168,3 +168,10 @@
     grid-column: auto;
   }
 }
+.vehicle-dispatch-v3-card {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.vehicle-dispatch-v3-card .app-demo-card__copy > p:not(.app-demo-card__eyebrow) {
+  max-width: 680px;
+}

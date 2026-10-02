@@ -16,6 +16,24 @@ export default function AppsPage() {
           和实用小工具。每一个小作品都会带着它的由来、简介和访问入口来到这里。
         </p>
         <section
+          className="app-demo-card vehicle-dispatch-v3-card"
+          aria-labelledby="vehicle-dispatch-v3-title"
+        >
+          <div className="app-demo-card__copy">
+            <p className="app-demo-card__eyebrow">网页版 Demo · V3.0</p>
+            <h2 id="vehicle-dispatch-v3-title">行序 · 车辆调度 V3.0</h2>
+            <p>
+              从用车申请、审批派车到加油维修与车辆档案，切换不同身份，体验完整的车辆调度与多角色管理流程。
+            </p>
+            <p className="app-demo-card__hint">
+              演示账号：wangmin　密码：Demo123! · 刷新恢复演示数据
+            </p>
+            <a className="app-demo-card__link" href="/demos/vehicle-dispatch-v3/">
+              打开新版演示 <ArrowUpRight aria-hidden="true" size={18} />
+            </a>
+          </div>
+        </section>
+        <section
           className="app-demo-card"
           aria-labelledby="vehicle-dispatch-title"
         >
