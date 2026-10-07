@@ -106,3 +106,27 @@ test('Pages 发布配置启用静态导出并覆盖实验室动态页面参数',
   assert.match(subjectPage, /generateStaticParams/);
   assert.match(subjectPage, /labSubjects\.map/);
 });
+
+test('作品页提供受密码保护的汇报材料目录', () => {
+  const content = fs.readFileSync(new URL('../lib/site-content.ts', import.meta.url), 'utf8');
+  const works = fs.readFileSync(new URL('../app/works/page.tsx', import.meta.url), 'utf8');
+  const gate = fs.readFileSync(new URL('../components/report-access-gate.tsx', import.meta.url), 'utf8');
+
+  assert.match(content, /汇报材料/);
+  assert.match(content, /\/works\/reports/);
+  assert.match(works, /reportEntries/);
+  assert.match(gate, /sessionStorage/);
+  assert.match(gate, /subtle\.digest/);
+  assert.ok(fs.existsSync('app/works/reports/page.tsx'));
+  assert.ok(fs.existsSync('app/works/reports/2026-national-day/page.tsx'));
+});
+
+test('汇报材料正文与四张配图已进入静态资源目录', () => {
+  const reportDir = 'public/reports/2026-national-day';
+  const report = fs.readFileSync(`${reportDir}/report.md`, 'utf8');
+
+  assert.match(report, /陈国喜 2026年国庆汇报/);
+  ['total-technology-map.png', 'enta-next.png', 'skill-studio-ai.png', 'aigov-insight.png'].forEach((name) => {
+    assert.ok(fs.existsSync(`${reportDir}/${name}`), `${name} 应存在`);
+  });
+});

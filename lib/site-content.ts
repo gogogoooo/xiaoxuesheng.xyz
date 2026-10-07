@@ -95,6 +95,17 @@ export const experimentsBySubject: Record<SubjectSlug, ExperimentCard[]> = {
   chemistry: [],
 };
 
+export const reportEntries: EntryCard[] = [
+  {
+    slug: 'reports',
+    title: '2026 年国庆汇报',
+    description: '基础采集研发部门汇报稿，整理技术演进、AI 能力底座与团队积累。',
+    href: '/works/reports/2026-national-day',
+    label: '密码访问',
+    accent: 'violet',
+  },
+];
+
 export function isSubjectSlug(value: string): value is SubjectSlug {
   return value === 'circuits' || value === 'physics' || value === 'chemistry';
 }
