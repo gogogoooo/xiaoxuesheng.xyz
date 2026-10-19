@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#faf7ef">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="referrer" content="no-referrer">
+<title>今晚涮什么 · 火锅选菜</title>
+<style>
+:root{--paper:#faf7ef;--ink:#29392d;--muted:#747c70;--green:#315d42;--line:#e4e5d7;--orange:#ce5634}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d29b48;outline-offset:3px}.page{max-width:700px;margin:auto;padding:26px 22px 150px}.eyebrow{font-size:11px;letter-spacing:3px;color:var(--green);font-weight:700;display:flex;align-items:center;gap:9px}.dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}header{position:relative;overflow:hidden;padding:8px 0 25px;border-bottom:1px solid var(--line)}h1{font-size:clamp(36px,8vw,52px);line-height:1.2;letter-spacing:-2px;margin:22px 0 12px;font-weight:800}h1 span{color:var(--orange)}.intro{color:var(--muted);font-size:14px;line-height:1.8;margin:0;max-width:76%}.pot{position:absolute;right:0;bottom:22px;width:105px;height:105px;opacity:.92}.steps{display:flex;gap:18px;margin-top:25px;font-size:11px;color:var(--muted)}.steps b{color:var(--green);margin-right:4px;font-size:12px}.identity{display:flex;align-items:center;gap:12px;margin:22px 0}.identity label{font-size:13px;white-space:nowrap;font-weight:600}.identity input{min-width:0;width:100%;border:1px solid var(--line);background:#fffdf8;border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink)}.optional{font-size:11px;color:var(--muted);font-weight:400}.nav{display:flex;overflow:auto;gap:8px;padding:0 0 12px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{white-space:nowrap;border:1px solid var(--line);padding:9px 14px;border-radius:30px;font-size:12px;color:var(--muted);background:transparent}.nav button.active{background:var(--green);border-color:var(--green);color:#fff}.section{margin:22px 0 30px;scroll-margin-top:15px}.section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:13px}.section-head h2{font-size:19px;margin:0;letter-spacing:-.5px}.section-head span{font-size:11px;color:var(--muted);letter-spacing:1px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.food{position:relative;min-height:92px;border:1px solid var(--line);border-radius:13px;background:#fffdf8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--ink);transition:background .15s,border-color .15s}.food .emoji{font-size:27px;line-height:1.2}.food .name{font-size:13px;font-weight:500}.food .check{position:absolute;right:7px;top:7px;width:15px;height:15px;border:1px solid #daddd1;border-radius:50%;font-size:10px;line-height:14px;color:transparent}.food[aria-pressed=true]{background:#edf2e5;border-color:var(--green)}.food[aria-pressed=true] .check{background:var(--green);color:white;border-color:var(--green)}.notes{padding:19px;background:#f0efe3;border-radius:14px}.notes label{font-size:14px;font-weight:600;display:block;margin-bottom:10px}.notes textarea{resize:vertical;width:100%;min-height:75px;border:1px solid var(--line);background:#fffdf8;border-radius:9px;padding:12px;font-size:13px;line-height:1.6;color:var(--ink)}.footnote{font-size:11px;line-height:1.8;color:var(--muted);text-align:center;margin-top:22px}.previous{border:0;background:none;color:var(--green);text-decoration:underline;font-size:12px;padding:10px}.previous[hidden]{display:none}.dock{position:fixed;bottom:0;left:0;right:0;background:#faf7eff5;border-top:1px solid var(--line);padding:14px 22px calc(14px + env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:2}.dock-inner{max-width:656px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}.tally{font-size:13px}.tally strong{font-size:27px;color:var(--green);margin:0 4px}.clear{background:none;border:0;color:var(--muted);font-size:11px;padding:6px 0;display:block}.primary{border:0;background:var(--green);color:#fff;padding:16px 25px;border-radius:12px;font-weight:600;font-size:14px}.primary:disabled{opacity:.4;cursor:default}.overlay{position:fixed;inset:0;background:#18271fb3;z-index:10;display:flex;align-items:center;justify-content:center;padding:20px}.overlay[hidden]{display:none}.modal{background:var(--paper);border-radius:22px;width:100%;max-width:460px;padding:25px;max-height:88dvh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal h2{font-size:23px;margin:0}.close{border:0;background:#eaeadd;width:32px;height:32px;border-radius:50%;font-size:20px;color:var(--ink)}.modal p{font-size:13px;color:var(--muted);line-height:1.7}.result{width:100%;height:245px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;padding:16px;font-size:14px;line-height:1.9;resize:vertical;color:var(--ink);user-select:text;-webkit-user-select:text}.modal .primary{width:100%;margin-top:15px}.hint{min-height:23px;font-size:12px;color:var(--green);margin-top:10px;text-align:center}.toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:12px 18px;z-index:20;font-size:13px;white-space:nowrap}.toast[hidden]{display:none}@media(min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.food{min-height:100px}.pot{right:16px;width:130px;height:130px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main class="page">
+<header>
+<div class="eyebrow"><span class="dot"></span> HOT POT CLUB · 一起吃火锅</div>
+<h1>今晚<span>涮</span>什么？</h1>
+<p class="intro">把想吃的都选上，<br>凑一桌热气腾腾的快乐。</p>
+<svg class="pot" viewBox="0 0 140 140" fill="none" aria-hidden="true"><path d="M46 37c-12-12 11-15 0-28M70 32c-11-13 11-17 0-29M94 37c-11-12 11-15 0-28" stroke="#ce5634" stroke-width="3" stroke-linecap="round"/><path d="M24 72H9v17h20M116 72h15v17h-20" stroke="#315d42" stroke-width="6" stroke-linejoin="round"/><path d="M23 68h94v28c0 19-17 31-47 31S23 115 23 96V68Z" fill="#315d42"/><ellipse cx="70" cy="68" rx="47" ry="17" fill="#ece5c9" stroke="#315d42" stroke-width="5"/><path d="M70 52c-17 9 16 23 0 32" stroke="#315d42" stroke-width="4"/><ellipse cx="47" cy="65" rx="9" ry="4" fill="#ce5634" transform="rotate(-20 47 65)"/><ellipse cx="91" cy="71" rx="10" ry="4" fill="#7e9c68" transform="rotate(18 91 71)"/><circle cx="92" cy="60" r="3" fill="#ce5634"/><circle cx="49" cy="76" r="3" fill="#7e9c68"/><path d="M48 132h44" stroke="#315d42" stroke-width="4" stroke-linecap="round"/></svg>
+<div class="steps"><span><b>01</b> 选想吃的</span><span><b>02</b> 生成清单</span><span><b>03</b> 复制发微信</span></div>
+</header>
+<div class="identity"><label for="guest">你的称呼 <span class="optional">选填</span></label><input id="guest" maxlength="30" placeholder="让大家知道是谁的心愿菜单" autocomplete="name"></div>
+<nav class="nav" aria-label="食材分类" id="nav"></nav>
+<div id="menu"></div>
+<section class="notes"><label for="notes">还有什么要交代的？ <span class="optional">选填</span></label><textarea id="notes" maxlength="300" placeholder="比如：少辣、不吃香菜，或者还有其他想吃的食材……"></textarea></section>
+<div class="footnote">按想吃的食材勾选，无需计算份数。<br>生成后复制到微信发送，就算报菜成功啦。<br><button class="previous" id="previous" hidden>查看上次生成的清单</button></div>
+</main>
+<footer class="dock"><div class="dock-inner"><div><div class="tally">想吃 <strong id="count" aria-live="polite">0</strong> 种食材</div><button id="clear" class="clear">清空选择</button></div><button id="submit" class="primary" disabled>选好了，提交清单 →</button></div></footer>
+<div class="overlay" id="overlay" hidden><section class="modal" role="dialog" aria-modal="true" aria-labelledby="result-title"><div class="modal-head"><h2 id="result-title">火锅心愿单，出炉！</h2><button class="close" id="close" aria-label="关闭清单">×</button></div><p>复制下面的文字，回到微信发给组局的人。<br>这里不会自动发送，记得在微信里发出去哦。</p><textarea class="result" id="result" readonly aria-label="已生成的点菜清单"></textarea><button class="primary" id="copy">复制清单，去微信发送</button><div class="hint" id="hint" role="status" aria-live="polite"></div></section></div>
+<div class="toast" id="toast" hidden role="status"></div>
+<script>
+'use strict';
+const categories = [
+ {name:'青菜',en:'GREENS',icon:'🥬',items:['生菜','菠菜','娃娃菜','茼蒿','油麦菜','小白菜','空心菜','西兰花']},
+ {name:'菌菇',en:'MUSHROOMS',icon:'🍄',items:['金针菇','香菇','平菇','蟹味菇','杏鲍菇','白玉菇']},
+ {name:'肉类',en:'MEAT',icon:'🥩',items:['肥牛卷','羊肉卷','五花肉','鲜牛肉','午餐肉','毛肚','鸭血','黄喉']},
+ {name:'蛋和豆制品',en:'EGGS & TOFU',icon:'🥚',items:['鸡蛋','鹌鹑蛋','嫩豆腐','冻豆腐','豆皮','腐竹','油豆腐','响铃卷']},
+ {name:'丸子和海鲜',en:'BALLS & SEAFOOD',icon:'🍤',items:['牛肉丸','鱼丸','虾滑','鲜虾','蟹棒','墨鱼丸','鱼豆腐','鱼片']},
+ {name:'根茎和主食',en:'VEGETABLES & NOODLES',icon:'🥔',items:['土豆','藕片','山药','白萝卜','玉米','冬瓜','海带','木耳','魔芋结','红薯粉','粉丝','方便面','年糕','水饺']}
+];
+const $ = id => document.getElementById(id);
+const allowed = new Set(categories.flatMap(c => c.items));
+const selected = new Set();
+const storageKey = 'hotpot-menu-v1';
+let lastResult = '', toastTimer, returnFocus;
+function loadDraft(){
+ try { const raw=JSON.parse(localStorage.getItem(storageKey)||'null');
+  if(!raw || typeof raw!=='object')return;
+  if(Array.isArray(raw.selected)) raw.selected.forEach(n=>{if(allowed.has(n))selected.add(n)});
+  $('guest').value=typeof raw.guest==='string'?raw.guest.slice(0,30):'';
+  $('notes').value=typeof raw.notes==='string'?raw.notes.slice(0,300):'';
+  lastResult=typeof raw.lastResult==='string'?raw.lastResult.slice(0,10000):'';
+ } catch(_) { /* Storage may be unavailable; selection still works. */ }
+}
+function saveDraft(){
+ try { localStorage.setItem(storageKey,JSON.stringify({selected:[...selected],guest:$('guest').value,notes:$('notes').value,lastResult}));return true; } catch(_) {return false;}
+}
+function update(){
+ $('count').textContent=selected.size;
+ $('submit').disabled=selected.size===0;
+ $('previous').hidden=!lastResult;
+ document.querySelectorAll('.food').forEach(b=>b.setAttribute('aria-pressed',String(selected.has(b.dataset.food))));
+ saveDraft();
+}
+function render(){
+ categories.forEach((category,index)=>{
+  const tab=document.createElement('button');tab.type='button';tab.textContent=category.name;
+  tab.className=index===0?'active':'';
+  tab.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));tab.classList.add('active');$('category-'+index).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})});
+  $('nav').appendChild(tab);
+  const section=document.createElement('section');section.id='category-'+index;section.className='section';
+  const heading=document.createElement('div');heading.className='section-head';
+  const title=document.createElement('h2');title.textContent=category.name;
+  const subtitle=document.createElement('span');subtitle.textContent=category.en;
+  heading.append(title,subtitle);section.appendChild(heading);
+  const grid=document.createElement('div');grid.className='grid';
+  category.items.forEach(name=>{
+   const button=document.createElement('button');button.type='button';button.className='food';button.dataset.food=name;button.setAttribute('aria-label',name);button.setAttribute('aria-pressed','false');
+   const icon=document.createElement('span');icon.className='emoji';icon.textContent=category.icon;icon.setAttribute('aria-hidden','true');
+   const label=document.createElement('span');label.className='name';label.textContent=name;
+   const check=document.createElement('span');check.className='check';check.textContent='✓';check.setAttribute('aria-hidden','true');
+   button.append(icon,label,check);button.addEventListener('click',()=>{selected.has(name)?selected.delete(name):selected.add(name);update()});grid.appendChild(button);
+  });section.appendChild(grid);$('menu').appendChild(section);
+ });
+}
+function makeList(date=new Date()){
+ if(!selected.size)return '';
+ const guest=$('guest').value.trim().replace(/[\r\n]+/g,' ');
+ const parts=['🍲 火锅心愿单', '点菜人：'+(guest||'一位火锅搭子'),'时间：'+date.toLocaleString('zh-CN',{hour12:false}), ''];
+ categories.forEach(c=>{const items=c.items.filter(n=>selected.has(n));if(items.length)parts.push('【'+c.name+'】'+items.join('、'))});
+ parts.push('', '共选 '+selected.size+' 种食材');
+ const notes=$('notes').value.trim();if(notes)parts.push('备注：'+notes);
+ return parts.join('\n');
+}
+function openResult(text){
+ returnFocus=document.activeElement;$('result').value=text;$('hint').textContent='复制后请手动发送到微信';$('overlay').hidden=false;document.body.style.overflow='hidden';$('copy').focus();
+}
+function closeResult(){$('overlay').hidden=true;document.body.style.overflow='';if(returnFocus)returnFocus.focus()}
+function toast(text){clearTimeout(toastTimer);$('toast').textContent=text;$('toast').hidden=false;toastTimer=setTimeout(()=>{$('toast').hidden=true},2200)}
+async function copyResult(){
+ let copied=false;
+ try {if(navigator.clipboard && window.isSecureContext){await navigator.clipboard.writeText($('result').value);copied=true;}}catch(_){}
+ if(!copied){try{$('result').focus();$('result').select();$('result').setSelectionRange(0,$('result').value.length);copied=document.execCommand('copy')}catch(_){}}
+ $('hint').textContent=copied?'已复制！回到微信，粘贴并发送即可。':'自动复制未成功，请长按上方文字，选择全选并复制。';
+ $('copy').textContent=copied?'已复制 · 可以去微信发送了':'重新复制清单';
+}
+$('submit').addEventListener('click',()=>{const text=makeList();if(!text)return;lastResult=text;const saved=saveDraft();update();$('copy').textContent='复制清单，去微信发送';openResult(text);if(!saved)$('hint').textContent='浏览器无法保存记录，请及时复制并发送到微信。'});
+$('copy').addEventListener('click',copyResult);
+$('close').addEventListener('click',closeResult);
+$('overlay').addEventListener('click',event=>{if(event.target===$('overlay'))closeResult()});
+document.addEventListener('keydown',event=>{
+ if($('overlay').hidden)return;
+ if(event.key==='Escape')closeResult();
+ if(event.key==='Tab'){const elements=[$('close'),$('result'),$('copy')];const first=elements[0],last=elements[elements.length-1];if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}}
+});
+$('clear').addEventListener('click',()=>{if(!selected.size)return;selected.clear();update();toast('已清空食材选择')});
+$('guest').addEventListener('input',saveDraft);$('notes').addEventListener('input',saveDraft);
+$('previous').addEventListener('click',()=>{if(lastResult){$('copy').textContent='复制清单，去微信发送';openResult(lastResult)}});
+loadDraft();render();update();
+</script>
+</body>
+</html>
