@@ -33,6 +33,8 @@
 @media(hover:hover){.food:hover{border-color:var(--tone-ink)}}
 @media(min-width:600px){.food{min-height:68px}.food .name{font-size:17px}}
 @media(max-width:360px){.page{padding-inline:16px}.section-head{flex-wrap:wrap}.food .name{font-size:15px}}
+.food .name--long{font-size:14px}
+@media(min-width:600px){.food .name--long{font-size:16px}}
 </style>
 </head>
 <body>
@@ -56,12 +58,12 @@
 <script>
 'use strict';
 const categories = [
- {name:'青菜',en:'GREENS',tone:'greens',items:['生菜','菠菜','娃娃菜','茼蒿','油麦菜','小白菜','空心菜','西兰花','豆芽','大白菜','上海青','豌豆尖','香菜']},
- {name:'菌菇',en:'MUSHROOMS',tone:'mushrooms',items:['金针菇','香菇','平菇','蟹味菇','杏鲍菇','白玉菇','海鲜菇','口蘑','竹荪']},
- {name:'肉类',en:'MEAT',tone:'meat',items:['肥牛卷','羊肉卷','五花肉','鲜牛肉','午餐肉','毛肚','鸭血','黄喉','牛百叶','鸭肠','酥肉','火腿肠','肥肠']},
- {name:'蛋和豆制品',en:'EGGS & TOFU',tone:'tofu',items:['鸡蛋','鹌鹑蛋','嫩豆腐','冻豆腐','豆皮','干豆腐','油豆皮','老豆腐','豆干','腐竹','油豆腐','响铃卷']},
- {name:'丸子和海鲜',en:'BALLS & SEAFOOD',tone:'seafood',items:['牛肉丸','鱼丸','虾滑','鲜虾','蟹棒','墨鱼丸','鱼豆腐','鱼片','贡丸','虾丸','鱼籽包','鱿鱼','花蛤']},
- {name:'根茎和主食',en:'VEGETABLES & NOODLES',tone:'staples',items:['土豆','藕片','山药','白萝卜','玉米','冬瓜','海带','木耳','魔芋结','红薯粉','粉丝','方便面','年糕','水饺','莴笋','笋片','南瓜','宽粉','苕皮','乌冬面','油条']}
+ {name:'青菜',en:'GREENS',tone:'greens',items:['大白菜','娃娃菜','菠菜','茼蒿','生菜','油麦菜','小白菜','油菜','豆芽','西兰花','香菜']},
+ {name:'菌菇',en:'MUSHROOMS',tone:'mushrooms',items:['金针菇','香菇','平菇','口蘑','杏鲍菇','蟹味菇','白玉菇','海鲜菇']},
+ {name:'肉类',en:'MEAT',tone:'meat',items:['羊肉卷','手切羊肉','羊上脑','肥牛卷','鲜牛肉','五花肉','午餐肉','毛肚','牛百叶','鸭血','火腿肠']},
+ {name:'蛋和豆制品',en:'EGGS & TOFU',tone:'tofu',items:['鸡蛋','鹌鹑蛋','嫩豆腐','冻豆腐','老豆腐','干豆腐','油豆皮','豆皮','豆腐丝','豆干','腐竹','油豆腐','面筋']},
+ {name:'丸子和海鲜',en:'BALLS & SEAFOOD',tone:'seafood',items:['正大鸡肉丸','牛肉丸','猪肉丸','鱼丸','虾丸','虾滑','鲜虾','蟹棒','鱼豆腐','鱼片']},
+ {name:'根茎和主食',en:'VEGETABLES & NOODLES',tone:'staples',items:['土豆','山药','白萝卜','藕片','玉米','冬瓜','海带','木耳','魔芋结','红薯粉','粉丝','宽粉','方便面','年糕','水饺','烧饼','馒头','手擀面','挂面']}
 ];
 const $ = id => document.getElementById(id);
 const allowed = new Set(categories.flatMap(c => c.items));
@@ -101,7 +103,7 @@ function render(){
   const grid=document.createElement('div');grid.className='grid';
   category.items.forEach(name=>{
    const button=document.createElement('button');button.type='button';button.className='food';button.dataset.food=name;button.setAttribute('aria-label',name);button.setAttribute('aria-pressed','false');
-   const label=document.createElement('span');label.className='name';label.textContent=name;
+   const label=document.createElement('span');label.className=name.length>4?'name name--long':'name';label.textContent=name;
    const check=document.createElement('span');check.className='check';check.textContent='✓';check.setAttribute('aria-hidden','true');
    button.append(label,check);button.addEventListener('click',()=>{selected.has(name)?selected.delete(name):selected.add(name);update()});grid.appendChild(button);
   });section.appendChild(grid);$('menu').appendChild(section);
