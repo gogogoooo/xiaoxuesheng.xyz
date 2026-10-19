@@ -9,6 +9,30 @@
 <title>今晚涮什么 · 火锅选菜</title>
 <style>
 :root{--paper:#faf7ef;--ink:#29392d;--muted:#747c70;--green:#315d42;--line:#e4e5d7;--orange:#ce5634}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #d29b48;outline-offset:3px}.page{max-width:700px;margin:auto;padding:26px 22px 150px}.eyebrow{font-size:11px;letter-spacing:3px;color:var(--green);font-weight:700;display:flex;align-items:center;gap:9px}.dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}header{position:relative;overflow:hidden;padding:8px 0 25px;border-bottom:1px solid var(--line)}h1{font-size:clamp(36px,8vw,52px);line-height:1.2;letter-spacing:-2px;margin:22px 0 12px;font-weight:800}h1 span{color:var(--orange)}.intro{color:var(--muted);font-size:14px;line-height:1.8;margin:0;max-width:76%}.pot{position:absolute;right:0;bottom:22px;width:105px;height:105px;opacity:.92}.steps{display:flex;gap:18px;margin-top:25px;font-size:11px;color:var(--muted)}.steps b{color:var(--green);margin-right:4px;font-size:12px}.identity{display:flex;align-items:center;gap:12px;margin:22px 0}.identity label{font-size:13px;white-space:nowrap;font-weight:600}.identity input{min-width:0;width:100%;border:1px solid var(--line);background:#fffdf8;border-radius:10px;padding:12px 14px;font-size:14px;color:var(--ink)}.optional{font-size:11px;color:var(--muted);font-weight:400}.nav{display:flex;overflow:auto;gap:8px;padding:0 0 12px;scrollbar-width:none}.nav::-webkit-scrollbar{display:none}.nav button{white-space:nowrap;border:1px solid var(--line);padding:9px 14px;border-radius:30px;font-size:12px;color:var(--muted);background:transparent}.nav button.active{background:var(--green);border-color:var(--green);color:#fff}.section{margin:22px 0 30px;scroll-margin-top:15px}.section-head{display:flex;align-items:baseline;gap:10px;margin-bottom:13px}.section-head h2{font-size:19px;margin:0;letter-spacing:-.5px}.section-head span{font-size:11px;color:var(--muted);letter-spacing:1px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.food{position:relative;min-height:92px;border:1px solid var(--line);border-radius:13px;background:#fffdf8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:var(--ink);transition:background .15s,border-color .15s}.food .emoji{font-size:27px;line-height:1.2}.food .name{font-size:13px;font-weight:500}.food .check{position:absolute;right:7px;top:7px;width:15px;height:15px;border:1px solid #daddd1;border-radius:50%;font-size:10px;line-height:14px;color:transparent}.food[aria-pressed=true]{background:#edf2e5;border-color:var(--green)}.food[aria-pressed=true] .check{background:var(--green);color:white;border-color:var(--green)}.notes{padding:19px;background:#f0efe3;border-radius:14px}.notes label{font-size:14px;font-weight:600;display:block;margin-bottom:10px}.notes textarea{resize:vertical;width:100%;min-height:75px;border:1px solid var(--line);background:#fffdf8;border-radius:9px;padding:12px;font-size:13px;line-height:1.6;color:var(--ink)}.footnote{font-size:11px;line-height:1.8;color:var(--muted);text-align:center;margin-top:22px}.previous{border:0;background:none;color:var(--green);text-decoration:underline;font-size:12px;padding:10px}.previous[hidden]{display:none}.dock{position:fixed;bottom:0;left:0;right:0;background:#faf7eff5;border-top:1px solid var(--line);padding:14px 22px calc(14px + env(safe-area-inset-bottom));backdrop-filter:blur(12px);z-index:2}.dock-inner{max-width:656px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}.tally{font-size:13px}.tally strong{font-size:27px;color:var(--green);margin:0 4px}.clear{background:none;border:0;color:var(--muted);font-size:11px;padding:6px 0;display:block}.primary{border:0;background:var(--green);color:#fff;padding:16px 25px;border-radius:12px;font-weight:600;font-size:14px}.primary:disabled{opacity:.4;cursor:default}.overlay{position:fixed;inset:0;background:#18271fb3;z-index:10;display:flex;align-items:center;justify-content:center;padding:20px}.overlay[hidden]{display:none}.modal{background:var(--paper);border-radius:22px;width:100%;max-width:460px;padding:25px;max-height:88dvh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center}.modal h2{font-size:23px;margin:0}.close{border:0;background:#eaeadd;width:32px;height:32px;border-radius:50%;font-size:20px;color:var(--ink)}.modal p{font-size:13px;color:var(--muted);line-height:1.7}.result{width:100%;height:245px;border:1px solid var(--line);border-radius:12px;background:#fffdf8;padding:16px;font-size:14px;line-height:1.9;resize:vertical;color:var(--ink);user-select:text;-webkit-user-select:text}.modal .primary{width:100%;margin-top:15px}.hint{min-height:23px;font-size:12px;color:var(--green);margin-top:10px;text-align:center}.toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:#fff;border-radius:10px;padding:12px 18px;z-index:20;font-size:13px;white-space:nowrap}.toast[hidden]{display:none}@media(min-width:600px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}.food{min-height:100px}.pot{right:16px;width:130px;height:130px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+/* Text-first cards: category colors support the labels; the check marks selection. */
+[data-tone="greens"]{--tone-ink:#385d3b;--tone-bg:#f0f5ed;--tone-line:#d9e3d2;--tone-selected:#dfead8}
+[data-tone="mushrooms"]{--tone-ink:#756044;--tone-bg:#f5f0e8;--tone-line:#e5dbce;--tone-selected:#e9dfd1}
+[data-tone="meat"]{--tone-ink:#95483d;--tone-bg:#fbefed;--tone-line:#edd7d2;--tone-selected:#f3d9d4}
+[data-tone="tofu"]{--tone-ink:#7e6327;--tone-bg:#faf3df;--tone-line:#e9dfbf;--tone-selected:#f3e2b3}
+[data-tone="seafood"]{--tone-ink:#356476;--tone-bg:#edf4f7;--tone-line:#d2e2e8;--tone-selected:#d7e8ee}
+[data-tone="staples"]{--tone-ink:#925c32;--tone-bg:#fbf0e5;--tone-line:#ebdac8;--tone-selected:#f3dec7}
+.nav button{background:var(--tone-bg);border-color:var(--tone-line);color:var(--tone-ink)}
+.nav button.active{background:var(--tone-ink);border-color:var(--tone-ink);color:#fff}
+.section{margin:26px 0 32px}
+.section-head{align-items:center;gap:9px;margin-bottom:12px}
+.section-head::before{content:'';width:4px;height:18px;border-radius:4px;background:var(--tone-ink);flex-shrink:0}
+.section-head h2{color:var(--tone-ink);font-size:18px}
+.section-head span{font-size:10px;letter-spacing:.6px}
+.grid{gap:8px}
+.food{min-height:64px;padding:20px 8px;border:1px solid var(--tone-line);border-radius:10px;background:var(--tone-bg);color:var(--ink);gap:0;transition:background .15s,border-color .15s,box-shadow .15s}
+.food .name{font-size:16px;font-weight:600;line-height:1.35;letter-spacing:.02em}
+.food .check{top:5px;right:5px;width:15px;height:15px;border:0;border-radius:5px;display:grid;place-items:center;font-size:11px;font-weight:700;line-height:1;color:#fff;background:var(--tone-ink);opacity:0}
+.food[aria-pressed=true]{background:var(--tone-selected);border-color:var(--tone-ink);box-shadow:inset 0 0 0 1px var(--tone-ink)}
+.food[aria-pressed=true] .name{color:var(--tone-ink)}
+.food[aria-pressed=true] .check{opacity:1;background:var(--tone-ink);border:0}
+@media(hover:hover){.food:hover{border-color:var(--tone-ink)}}
+@media(min-width:600px){.food{min-height:68px}.food .name{font-size:17px}}
+@media(max-width:360px){.page{padding-inline:16px}.section-head{flex-wrap:wrap}.food .name{font-size:15px}}
 </style>
 </head>
 <body>
@@ -32,12 +56,12 @@
 <script>
 'use strict';
 const categories = [
- {name:'青菜',en:'GREENS',icon:'🥬',items:['生菜','菠菜','娃娃菜','茼蒿','油麦菜','小白菜','空心菜','西兰花','豆芽','大白菜','上海青','豌豆尖','香菜']},
- {name:'菌菇',en:'MUSHROOMS',icon:'🍄',items:['金针菇','香菇','平菇','蟹味菇','杏鲍菇','白玉菇','海鲜菇','口蘑','竹荪']},
- {name:'肉类',en:'MEAT',icon:'🥩',items:['肥牛卷','羊肉卷','五花肉','鲜牛肉','午餐肉','毛肚','鸭血','黄喉','牛百叶','鸭肠','酥肉','火腿肠','肥肠']},
- {name:'蛋和豆制品',en:'EGGS & TOFU',icon:'🥚',items:['鸡蛋','鹌鹑蛋','嫩豆腐','冻豆腐','豆皮','干豆腐','油豆皮','老豆腐','豆干','腐竹','油豆腐','响铃卷']},
- {name:'丸子和海鲜',en:'BALLS & SEAFOOD',icon:'🍤',items:['牛肉丸','鱼丸','虾滑','鲜虾','蟹棒','墨鱼丸','鱼豆腐','鱼片','贡丸','虾丸','鱼籽包','鱿鱼','花蛤']},
- {name:'根茎和主食',en:'VEGETABLES & NOODLES',icon:'🥔',items:['土豆','藕片','山药','白萝卜','玉米','冬瓜','海带','木耳','魔芋结','红薯粉','粉丝','方便面','年糕','水饺','莴笋','笋片','南瓜','宽粉','苕皮','乌冬面','油条']}
+ {name:'青菜',en:'GREENS',tone:'greens',items:['生菜','菠菜','娃娃菜','茼蒿','油麦菜','小白菜','空心菜','西兰花','豆芽','大白菜','上海青','豌豆尖','香菜']},
+ {name:'菌菇',en:'MUSHROOMS',tone:'mushrooms',items:['金针菇','香菇','平菇','蟹味菇','杏鲍菇','白玉菇','海鲜菇','口蘑','竹荪']},
+ {name:'肉类',en:'MEAT',tone:'meat',items:['肥牛卷','羊肉卷','五花肉','鲜牛肉','午餐肉','毛肚','鸭血','黄喉','牛百叶','鸭肠','酥肉','火腿肠','肥肠']},
+ {name:'蛋和豆制品',en:'EGGS & TOFU',tone:'tofu',items:['鸡蛋','鹌鹑蛋','嫩豆腐','冻豆腐','豆皮','干豆腐','油豆皮','老豆腐','豆干','腐竹','油豆腐','响铃卷']},
+ {name:'丸子和海鲜',en:'BALLS & SEAFOOD',tone:'seafood',items:['牛肉丸','鱼丸','虾滑','鲜虾','蟹棒','墨鱼丸','鱼豆腐','鱼片','贡丸','虾丸','鱼籽包','鱿鱼','花蛤']},
+ {name:'根茎和主食',en:'VEGETABLES & NOODLES',tone:'staples',items:['土豆','藕片','山药','白萝卜','玉米','冬瓜','海带','木耳','魔芋结','红薯粉','粉丝','方便面','年糕','水饺','莴笋','笋片','南瓜','宽粉','苕皮','乌冬面','油条']}
 ];
 const $ = id => document.getElementById(id);
 const allowed = new Set(categories.flatMap(c => c.items));
@@ -66,10 +90,10 @@ function update(){
 function render(){
  categories.forEach((category,index)=>{
   const tab=document.createElement('button');tab.type='button';tab.textContent=category.name;
-  tab.className=index===0?'active':'';
+  tab.className=index===0?'active':'';tab.dataset.tone=category.tone;
   tab.addEventListener('click',()=>{document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));tab.classList.add('active');$('category-'+index).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'})});
   $('nav').appendChild(tab);
-  const section=document.createElement('section');section.id='category-'+index;section.className='section';
+  const section=document.createElement('section');section.id='category-'+index;section.className='section';section.dataset.tone=category.tone;
   const heading=document.createElement('div');heading.className='section-head';
   const title=document.createElement('h2');title.textContent=category.name;
   const subtitle=document.createElement('span');subtitle.textContent=category.en;
@@ -77,10 +101,9 @@ function render(){
   const grid=document.createElement('div');grid.className='grid';
   category.items.forEach(name=>{
    const button=document.createElement('button');button.type='button';button.className='food';button.dataset.food=name;button.setAttribute('aria-label',name);button.setAttribute('aria-pressed','false');
-   const icon=document.createElement('span');icon.className='emoji';icon.textContent=category.icon;icon.setAttribute('aria-hidden','true');
    const label=document.createElement('span');label.className='name';label.textContent=name;
    const check=document.createElement('span');check.className='check';check.textContent='✓';check.setAttribute('aria-hidden','true');
-   button.append(icon,label,check);button.addEventListener('click',()=>{selected.has(name)?selected.delete(name):selected.add(name);update()});grid.appendChild(button);
+   button.append(label,check);button.addEventListener('click',()=>{selected.has(name)?selected.delete(name):selected.add(name);update()});grid.appendChild(button);
   });section.appendChild(grid);$('menu').appendChild(section);
  });
 }
