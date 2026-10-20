@@ -58,7 +58,7 @@
 <script>
 'use strict';
 const categories = [
- {name:'青菜',en:'GREENS',tone:'greens',items:['大白菜','娃娃菜','菠菜','茼蒿','生菜','油麦菜','小白菜','油菜','豆芽','西兰花','香菜']},
+ {name:'青菜',en:'GREENS',tone:'greens',items:['大白菜','娃娃菜','菠菜','茼蒿','生菜','油麦菜','小白菜','油菜','豌豆苗','绿豆芽','西兰花','香菜']},
  {name:'菌菇',en:'MUSHROOMS',tone:'mushrooms',items:['金针菇','香菇','平菇','口蘑','杏鲍菇','蟹味菇','白玉菇','海鲜菇']},
  {name:'肉类',en:'MEAT',tone:'meat',items:['羊肉卷','手切羊肉','羊上脑','肥牛卷','鲜牛肉','五花肉','午餐肉','毛肚','牛百叶','鸭血','火腿肠']},
  {name:'蛋和豆制品',en:'EGGS & TOFU',tone:'tofu',items:['鸡蛋','鹌鹑蛋','嫩豆腐','冻豆腐','老豆腐','干豆腐','油豆皮','豆皮','豆腐丝','豆干','腐竹','油豆腐','面筋']},
@@ -73,7 +73,7 @@ let lastResult = '', toastTimer, returnFocus;
 function loadDraft(){
  try { const raw=JSON.parse(localStorage.getItem(storageKey)||'null');
   if(!raw || typeof raw!=='object')return;
-  if(Array.isArray(raw.selected)) raw.selected.forEach(n=>{if(allowed.has(n))selected.add(n)});
+  if(Array.isArray(raw.selected)) raw.selected.forEach(n=>{const name=n==='豆芽'?'绿豆芽':n==='豌豆尖'?'豌豆苗':n;if(allowed.has(name))selected.add(name)});
   $('guest').value=typeof raw.guest==='string'?raw.guest.slice(0,30):'';
   $('notes').value=typeof raw.notes==='string'?raw.notes.slice(0,300):'';
   lastResult=typeof raw.lastResult==='string'?raw.lastResult.slice(0,10000):'';
