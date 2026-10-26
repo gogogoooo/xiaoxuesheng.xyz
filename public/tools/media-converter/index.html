@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="robots" content="noindex, nofollow">
+  <title>格式工坊 · 音视频转换</title>
+  <meta name="description" content="一个在浏览器中处理音视频的轻量工具。选择文件、调整格式，将转换过程留在自己的设备上。">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9zM14 3v6h6M8 14h8M8 17h5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></symbol>
+    <symbol id="i-audio" viewBox="0 0 24 24"><path d="M9 18V5l11-2v13M9 8l11-2"/><ellipse cx="6" cy="18" rx="3" ry="3"/><ellipse cx="17" cy="16" rx="3" ry="3"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 17v3h16v-3"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h7m4 0h5M4 17h3m4 0h9"/><circle cx="13" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></symbol>
+  </svg>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="造物档案馆首页"><span class="brand-mark">造</span><span>造物档案馆<span class="brand-separator">/</span><b>小工具</b></span></a>
+    <div class="header-actions"><span class="local-badge"><span></span>在你的设备上运行</span><a class="back-link" href="/apps">全部工具 <span aria-hidden="true">↗</span></a></div>
+  </header>
+
+  <main class="page">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-line"></span>MEDIA WORKSHOP<span class="edition">01</span></p>
+        <h1 id="page-title">让音视频，<br class="mobile-break"><span>换个格式。</span></h1>
+        <p class="hero-description">从 FLV 到 MP4，从视频到声音。<br class="mobile-break">简单几步，把文件变成你需要的样子。</p>
+      </div>
+      <div class="format-art" aria-hidden="true">
+        <div class="art-orbit"></div>
+        <div class="art-file art-file--source"><span class="file-fold"></span><svg><use href="#i-video"/></svg><b>FLV</b><span>原始文件</span></div>
+        <div class="art-transfer"><svg><use href="#i-arrow"/></svg></div>
+        <div class="art-file art-file--target"><span class="file-fold"></span><svg><use href="#i-check"/></svg><b>MP4</b><span>准备就绪</span></div>
+        <span class="art-caption">A DIFFERENT FORMAT. SAME MOMENT.</span>
+      </div>
+    </section>
+
+    <div class="preview-banner"><span class="preview-label">设计预览</span><p>可以体验文件选择和格式设置；真实转换引擎尚未接入。</p><button type="button" id="show-states">查看状态设计 <span aria-hidden="true">↗</span></button></div>
+
+    <section class="workspace" aria-label="音视频转换工作区">
+      <div class="source-panel">
+        <div class="panel-heading"><div><span class="step-number">01</span><h2>选择源文件</h2></div><span class="panel-meta">单文件 · 小于 1 GB</span></div>
+        <input id="file-input" type="file" accept=".flv,.mp4,.mov,.mkv,.webm,.avi,.mp3,.wav,.m4a,.aac,.flac,.ogg" hidden>
+        <div class="dropzone" id="dropzone">
+          <div class="drop-graphic" aria-hidden="true"><span class="drop-page drop-page--back"></span><span class="drop-page"><svg><use href="#i-upload"/></svg></span></div>
+          <h3>把文件拖到这里</h3>
+          <p>或者从你的电脑中选择一个文件</p>
+          <button type="button" class="choose-button" id="choose-file"><svg><use href="#i-file"/></svg>选择文件</button>
+          <div class="source-formats" aria-label="支持选择的文件扩展名"><span>FLV</span><span>MP4</span><span>MOV</span><span>MKV</span><span>WebM</span><span>音频</span></div>
+        </div>
+
+        <div class="selected-file" id="selected-file" hidden>
+          <div class="selected-file__top"><div class="file-type-icon"><svg id="source-icon"><use href="#i-video"/></svg><span id="source-extension">FLV</span></div><div class="file-detail"><span class="file-local"><span></span>已选择本地文件</span><h3 id="source-name"></h3><p><span id="source-size"></span><span class="metadata-separator">·</span><span id="source-duration">正在读取时长…</span></p></div><button type="button" class="icon-button" id="remove-file" aria-label="移除文件"><svg><use href="#i-close"/></svg></button></div>
+          <div class="file-waveform" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <div class="selected-file__bottom"><span>文件已就位，接下来选择输出格式。</span><button type="button" id="replace-file">更换文件</button></div>
+        </div>
+        <p class="file-error" id="file-error" role="alert" hidden></p>
+        <p class="memory-notice" id="memory-notice" hidden><svg><use href="#i-info"/></svg>这是一个较大的文件。建议使用电脑浏览器，并关闭不需要的标签页；实际可处理大小取决于可用内存。</p>
+        <div class="local-notice"><svg><use href="#i-lock"/></svg><p><b>文件留在本机</b><span>选择文件不会上传。后续转换也将在浏览器中完成。</span></p></div>
+      </div>
+
+      <div class="output-panel">
+        <div class="panel-heading"><div><span class="step-number">02</span><h2>设置输出</h2></div><svg class="settings-icon"><use href="#i-sliders"/></svg></div>
+        <div class="output-tabs" role="group" aria-label="输出类型"><button type="button" id="video-tab" aria-pressed="true"><svg><use href="#i-video"/></svg>视频格式</button><button type="button" id="audio-tab" aria-pressed="false"><svg><use href="#i-audio"/></svg>提取 / 转换音频</button></div>
+        <p class="field-label">输出格式 <span id="format-note">适合日常播放与分享</span></p>
+        <div class="format-options" id="format-options" role="group" aria-label="输出文件格式"></div>
+        <div class="setting-row"><label for="processing-mode">处理方式</label><select id="processing-mode"><option value="auto">自动 · 优先快速转封装</option><option value="encode">重新编码</option></select></div>
+        <p class="setting-explanation" id="mode-explanation">编码兼容时直接换封装，保留原始画质；不兼容时需要重新编码。</p>
+        <div class="setting-row"><label for="quality" id="quality-label">重新编码画质</label><select id="quality"><option value="balanced">均衡 · 推荐</option><option value="high">高画质 · 文件更大</option><option value="small">较小文件 · 画质降低</option></select></div>
+        <details class="advanced-settings"><summary><span>更多设置</span><span aria-hidden="true">＋</span></summary><div class="setting-row"><label for="resolution">输出分辨率</label><select id="resolution"><option value="original">保持原始</option><option value="1080">最高 1080p</option><option value="720">最高 720p</option></select></div><p>调整分辨率需要重新编码，处理时间通常更长。</p></details>
+        <div class="output-summary"><span>输出文件</span><p id="output-name">选择文件后显示名称<span>.mp4</span></p></div>
+        <button type="button" class="convert-button" id="convert-button" disabled>开始转换 <svg><use href="#i-arrow"/></svg></button>
+        <p class="engine-note" id="engine-note">设计阶段 · 转换功能待接入</p>
+      </div>
+    </section>
+
+    <section class="state-preview" id="state-preview" aria-labelledby="states-title" hidden>
+      <div class="state-preview__header"><div><p class="eyebrow">WORKFLOW PREVIEW</p><h2 id="states-title">每一步，都看得见。</h2></div><span class="state-preview__badge">以下为静态界面示例，不执行转换</span></div>
+      <div class="state-switch" role="group" aria-label="查看转换状态示例"><button type="button" data-state="processing" aria-pressed="true">转换进行中</button><button type="button" data-state="completed" aria-pressed="false">转换已完成</button><button type="button" data-state="error" aria-pressed="false">遇到问题</button></div>
+      <div class="status-card" id="processing-example"><div class="status-icon status-icon--progress"><svg><use href="#i-arrow"/></svg></div><div class="status-content"><div class="status-title"><h3>正在处理视频</h3><span>48<span>%</span></span></div><p>示例视频.flv <span aria-hidden="true">→</span> 示例视频.mp4</p><div class="progress-track" role="progressbar" aria-label="示例转换进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="48"><span></span></div><div class="progress-caption"><span>示例进度 · 重新编码</span><span>处理时间取决于设备性能</span></div></div></div>
+      <div class="status-card" id="completed-example" hidden><div class="status-icon status-icon--success"><svg><use href="#i-check"/></svg></div><div class="status-content"><h3>转换完成，可以带走了。</h3><p>示例视频.mp4 · 文件信息将在实际转换后显示</p><span class="result-note">下载按钮在真实转换完成后可用。</span></div><button type="button" class="download-example" disabled><svg><use href="#i-download"/></svg>下载 MP4</button></div>
+      <div class="status-card" id="error-example" hidden><div class="status-icon status-icon--error"><svg><use href="#i-info"/></svg></div><div class="status-content"><h3>这次没有完成转换。</h3><p>可能是文件编码不受支持，或浏览器可用内存不足。</p><span class="result-note">建议尝试更小的文件，或使用电脑浏览器重新处理。</span></div></div>
+    </section>
+
+    <section class="usage-notes" aria-label="使用说明"><div><span class="note-number">01 /</span><h3>本机处理</h3><p>视频无需上传，转换使用你设备的算力与内存。</p></div><div><span class="note-number">02 /</span><h3>一次一个，更从容</h3><p>单文件小于 1 GB。大文件建议在电脑端处理。</p></div><div><span class="note-number">03 /</span><h3>格式不同，耗时不同</h3><p>转封装通常更快；重新编码需要更多时间。</p></div></section>
+
+    <section class="faq" aria-labelledby="faq-title"><div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">开始之前，<br>你可能想知道。</h2></div><div class="faq-items"><details><summary>视频会上传到哪里？<span aria-hidden="true">＋</span></summary><p>此版本是界面设计预览，不会上传文件。计划接入浏览器端转换引擎，源文件和输出文件均在本机处理；首次使用时只需下载转换引擎。</p></details><details><summary>为什么小于 1 GB 也可能失败？<span aria-hidden="true">＋</span></summary><p>浏览器处理时还需要容纳运行程序、源文件和输出文件。1 GB 是文件选择上限，不是稳定处理的保证。内存较少的设备或手机可能无法处理较大的文件。</p></details><details><summary>换格式会损失画质吗？<span aria-hidden="true">＋</span></summary><p>快速转封装会原样保留音视频数据；需要重新编码时，画质和文件大小取决于输出设置。具体支持范围以接入的转换引擎为准。</p></details><details><summary>为什么选中文件后不能开始转换？<span aria-hidden="true">＋</span></summary><p>当前是第一版页面设计，文件选择、格式配置与状态示例可以体验，真实转换功能尚未接入。页面不会生成虚假的转换结果。</p></details></div></section>
+  </main>
+
+  <footer class="site-footer"><span>造物档案馆 <span class="footer-dot">·</span> 把小工具，做得顺手一点。</span><span>格式工坊 / 设计预览</span></footer>
+  <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
+</body>
+</html>
