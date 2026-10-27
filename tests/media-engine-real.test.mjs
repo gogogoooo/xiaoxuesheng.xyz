@@ -18,7 +18,7 @@ test('固定 Wasm 核心实际生成 FLV，并转换六种输出及选择性音�
     assert.equal(code,0,logs.join('\n'));
   };
   const probe = (input) => {
-    core.ffprobe('-v','error','-show_format','-show_streams','-of','json','-i',input,'-o','info.json');
+    core.ffprobe('-v','error','-count_packets','-show_format','-show_streams','-of','json','-i',input,'-o','info.json');
     const code = core.ret;
     core.reset();
     return parseProbeResult(code,core.FS.readFile('info.json',{encoding:'utf8'}));
@@ -40,6 +40,27 @@ test('固定 Wasm 核心实际生成 FLV，并转换六种输出及选择性音�
     });
   }
   exec(['-i','source.flv','-c:v','copy','-c:a','libmp3lame','mp3-source.flv']);
+  await t.test('MP4 → FLV → MP4 往返及 FLV 重新编码', () => {
+    const request = {mode:'auto',quality:'balanced',resolution:'original'};
+    exec(createConversionPlan({...request,format:'mp4'},media,{inputPath:'source.flv',outputPath:'roundtrip.mp4'}).args);
+    const originalMp4 = probe('roundtrip.mp4');
+    const toFlv = createConversionPlan({...request,format:'flv'},originalMp4,{inputPath:'roundtrip.mp4',outputPath:'roundtrip.flv'});
+    assert.equal(toFlv.method,'copy');
+    exec(toFlv.args);
+    assert.deepEqual([...core.FS.readFile('roundtrip.flv').subarray(0,3)],[70,76,86]);
+    const flv = probe('roundtrip.flv');
+    assert.equal(flv.video.codec_name,'h264');
+    assert.equal(flv.audio.codec_name,'aac');
+    exec(createConversionPlan({...request,format:'mp4'},flv,{inputPath:'roundtrip.flv',outputPath:'roundtrip-back.mp4'}).args);
+    const back = probe('roundtrip-back.mp4');
+    assert.ok(Math.abs(back.duration - originalMp4.duration) < .05, JSON.stringify({original:originalMp4.duration,back:back.duration}));
+    assert.ok(Number(back.video.nb_read_packets) > 0);
+    assert.equal(back.video.nb_read_packets,originalMp4.video.nb_read_packets);
+    assert.equal(back.audio.nb_read_packets,originalMp4.audio.nb_read_packets);
+    exec(createConversionPlan({...request,format:'flv',mode:'encode'},media,{inputPath:'source.flv',outputPath:'encoded.flv'}).args);
+    assert.equal(probe('encoded.flv').video.codec_name,'h264');
+    assert.equal(probe('encoded.flv').audio.codec_name,'aac');
+  });
   const plan = createConversionPlan({format:'mp4',mode:'auto',quality:'balanced',resolution:'original'},probe('mp3-source.flv'),{inputPath:'mp3-source.flv',outputPath:'result.mp4'});
   assert.equal(plan.method,'audio-encode');
   exec(plan.args);

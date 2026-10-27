@@ -107,7 +107,7 @@ export class FFmpegAdapter {
       if (exitCode !== 0) throw new ConversionError('CONVERSION_FAILED', '转换没有完成。请检查文件编码，或尝试较小的文件及较低分辨率。');
       stage('finalizing');
       const outputMedia = await probe(outputPath, 'result-info');
-      const outputIsVideo = ['mp4', 'webm'].includes(request.format);
+      const outputIsVideo = ['mp4', 'webm', 'flv'].includes(request.format);
       if (outputIsVideo ? !outputMedia.video : !outputMedia.audio) {
         throw new ConversionError('INVALID_OUTPUT', '输出文件未通过检查，请更换输出格式后重试。');
       }

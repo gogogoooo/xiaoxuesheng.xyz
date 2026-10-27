@@ -7,6 +7,7 @@ const FORMAT_OPTIONS = {
   video: [
     {value: 'mp4', title: 'MP4', detail: '兼容性优先'},
     {value: 'webm', title: 'WebM', detail: '适合网页播放'},
+    {value: 'flv', title: 'FLV', detail: '往返转换测试'},
   ],
   audio: [
     {value: 'mp3', title: 'MP3', detail: '日常聆听'},
@@ -35,7 +36,7 @@ let dragDepth = 0;
 let busy = false;
 let generation = 0;
 let lastProgressPaint = 0;
-let currentWarnings = new Set();
+const currentWarnings = new Set();
 const controller = new ConversionController();
 
 function extensionFor(name) {
@@ -156,7 +157,6 @@ function readDuration(file, extension) {
   const media = document.createElement(AUDIO_EXTENSIONS.has(extension) ? 'audio' : 'video');
   const url = URL.createObjectURL(file);
   let done = false;
-  let timeout;
   function finish(durationText) {
     if (done) return;
     done = true;
@@ -173,7 +173,7 @@ function readDuration(file, extension) {
   media.preload = 'metadata';
   media.onloadedmetadata = () => finish(formatDuration(media.duration));
   media.onerror = () => finish('浏览器无法预读时长');
-  timeout = setTimeout(() => finish('时长暂无法读取'), 4000);
+  const timeout = setTimeout(() => finish('时长暂无法读取'), 4000);
   media.src = url;
 }
 
@@ -399,9 +399,15 @@ async function startConversion() {
     elements['result-download'].hidden = false;
     elements['result-info'].textContent = `${formatSize(result.size)} · ${formatDuration(result.outputMedia.duration)} · 本机生成`;
     elements['result-preview'].hidden = false;
-    const player = result.mime.startsWith('video/') ? elements['result-video'] : elements['result-audio'];
-    player.src = result.url;
-    player.hidden = false;
+    if (request.format === 'flv') {
+      elements['preview-error'].textContent = 'FLV 通常无法在浏览器中直接播放。请下载后用支持 FLV 的播放器检查，也可将结果重新选入本工具转回 MP4。';
+      elements['preview-error'].hidden = false;
+    } else {
+      elements['preview-error'].textContent = '当前浏览器无法预览该编码，可以下载后使用其他播放器打开。';
+      const player = result.mime.startsWith('video/') ? elements['result-video'] : elements['result-audio'];
+      player.src = result.url;
+      player.hidden = false;
+    }
     showProgress(1, '转换完成');
     announce(`转换完成。${result.filename} 已准备好下载。`);
   } catch (error) {

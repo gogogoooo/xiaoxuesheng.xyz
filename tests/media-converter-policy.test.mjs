@@ -53,6 +53,21 @@ test('compatible video preserves quality while only incompatible MP3 audio is en
   assert.ok(!p.args.includes('-vf'));
 });
 
+test('FLV 输出保留兼容 H264/AAC，其他编码转换为 H264/AAC，且允许无音轨视频', () => {
+  const copy = plan([video(), audio()], {format:'flv'});
+  assert.equal(copy.method,'copy');
+  assert.equal(copy.mime,'video/x-flv');
+  assert.equal(option(copy,'-f'),'flv');
+  assert.equal(option(copy,'-c:v'),'copy');
+  assert.equal(option(copy,'-c:a'),'copy');
+  assert.equal(copy.args.includes('-movflags'),false);
+  const encoded = plan([video('vp9'), audio('opus')], {format:'flv'});
+  assert.equal(option(encoded,'-c:v'),'libx264');
+  assert.equal(option(encoded,'-c:a'),'aac');
+  assert.equal(plan([video()], {format:'flv'}).method,'copy');
+  fails(() => plan([audio()], {format:'flv'}),'NO_VIDEO');
+});
+
 test('VP8/Opus and VP9/Vorbis WebM remux, and compatible silent video remuxes', () => {
   for (const [v, a] of [['vp8', 'opus'], ['vp9', 'vorbis']]) assert.equal(plan([video(v), audio(a)], { format: 'webm' }).method, 'copy');
   assert.equal(plan([video()]).method, 'copy');
@@ -172,7 +187,7 @@ test('multi video/audio tracks and subtitles generate visible warnings', () => {
 test('configuration values reject unsupported options and injection strings', () => {
   for (const request of [{ format: '../mp4' }, { mode: 'copy' }, { quality: '-y' }, { resolution: '720;echo x' }, { format: 'MP4' }]) fails(() => plan([video(), audio()], request), 'INVALID_REQUEST');
   for (const paths of [{ forceEncode: 'yes' }, { inputPath: '-i' }, { outputPath: 'out\0.mp4' }]) fails(() => plan([video(), audio()], {}, paths), 'INVALID_PATH');
-  assert.deepEqual(Object.keys(MIME_TYPES).sort(), ['aac', 'flac', 'mp3', 'mp4', 'wav', 'webm']);
+  assert.deepEqual(Object.keys(MIME_TYPES).sort(), ['aac', 'flac', 'flv', 'mp3', 'mp4', 'wav', 'webm']);
   for (const format of Object.keys(MIME_TYPES)) assert.equal(plan([video(), audio()], { format }).format, format);
 });
 

@@ -7,7 +7,7 @@ export class ConversionError extends Error {
 }
 export const MAX_FILE_SIZE = 1_000_000_000;
 export const MIME_TYPES = Object.freeze({
-  mp4: 'video/mp4', webm: 'video/webm', mp3: 'audio/mpeg',
+  mp4: 'video/mp4', webm: 'video/webm', flv: 'video/x-flv', mp3: 'audio/mpeg',
   wav: 'audio/wav', aac: 'audio/aac', flac: 'audio/flac',
 });
 
@@ -130,12 +130,12 @@ function checkWavSize(media, codec, warnings) {
 function encodeAudio(args, stream, format, profile, warnings, videoOutput) {
   let codec;
   if (format === 'mp3') codec = 'libmp3lame';
-  else if (format === 'aac' || format === 'mp4') codec = 'aac';
+  else if (['aac', 'mp4', 'flv'].includes(format)) codec = 'aac';
   else if (format === 'webm') codec = 'libopus';
   else if (format === 'wav') codec = pcmCodec(audioRepresentation(stream));
   else codec = 'flac';
   args.push('-c:a', codec);
-  if (['mp3', 'aac', 'mp4', 'webm'].includes(format)) {
+  if (['mp3', 'aac', 'mp4', 'webm', 'flv'].includes(format)) {
     const bitrate = videoOutput ? profile.mp4Audio : format === 'aac' ? profile.aac : profile.audio;
     args.push('-b:a', bitrate);
   }
@@ -155,7 +155,8 @@ function encodeAudio(args, stream, format, profile, warnings, videoOutput) {
 export function createConversionPlan(request, media, paths) {
   validateRequest(request, paths);
   const { format, quality, mode, resolution } = request;
-  const videoOutput = format === 'mp4' || format === 'webm';
+  const videoOutput = ['mp4', 'webm', 'flv'].includes(format);
+  const h264Container = format === 'mp4' || format === 'flv';
   if (videoOutput && !media?.video) throw new ConversionError('NO_VIDEO', '文件中没有可转换的视频轨道。');
   if (!videoOutput && !media?.audio) throw new ConversionError('NO_AUDIO', '文件中没有可提取的音频轨道。');
   const warnings = [];
@@ -169,15 +170,15 @@ export function createConversionPlan(request, media, paths) {
   if (videoOutput) {
     mapStream(args, media.video);
     if (media.audio) mapStream(args, media.audio);
-    const compatibleVideo = format === 'mp4'
+    const compatibleVideo = h264Container
       ? media.video.codec_name === 'h264' && media.video.pix_fmt === 'yuv420p'
       : ['vp8', 'vp9'].includes(media.video.codec_name);
     const copyVideo = !force && resolution === 'original' && compatibleVideo;
-    copyAudio = !force && (format === 'mp4' ? media.audio?.codec_name === 'aac' : ['opus', 'vorbis'].includes(media.audio?.codec_name));
+    copyAudio = !force && (h264Container ? media.audio?.codec_name === 'aac' : ['opus', 'vorbis'].includes(media.audio?.codec_name));
     if (copyVideo) args.push('-c:v', 'copy');
     else {
       method = 'encode';
-      if (format === 'mp4') args.push('-c:v', 'libx264', '-preset', 'ultrafast', '-crf', PROFILES[quality].h264Crf, '-pix_fmt', 'yuv420p');
+      if (h264Container) args.push('-c:v', 'libx264', '-preset', 'ultrafast', '-crf', PROFILES[quality].h264Crf, '-pix_fmt', 'yuv420p');
       else args.push('-c:v', 'libvpx', '-deadline', 'realtime', '-cpu-used', '5', '-b:v', PROFILES[quality].vp8Bitrate, '-crf', PROFILES[quality].vp8Crf);
       args.push('-vf', videoFilter(media.video, resolution));
     }
