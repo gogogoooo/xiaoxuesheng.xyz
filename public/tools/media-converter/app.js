@@ -1,8 +1,5 @@
-'use strict';
-
-// This first iteration is an interactive design preview. No file is uploaded,
-// no conversion progress is fabricated, and no placeholder file is downloaded.
-const MAX_FILE_SIZE = 1_000_000_000;
+import {ConversionController} from './converter-controller.js';
+import {MAX_FILE_SIZE, outputFilename} from './conversion-policy.js';
 const LARGE_FILE_SIZE = 300_000_000;
 const AUDIO_EXTENSIONS = new Set(['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg']);
 const VIDEO_EXTENSIONS = new Set(['flv', 'mp4', 'mov', 'mkv', 'webm', 'avi']);
@@ -25,7 +22,9 @@ const elements = Object.fromEntries([
   'source-icon', 'file-error', 'memory-notice', 'video-tab', 'audio-tab',
   'format-options', 'format-note', 'processing-mode', 'mode-explanation', 'quality',
   'quality-label', 'resolution', 'output-name', 'engine-note', 'convert-button',
-  'announcement', 'show-states', 'state-preview',
+  'announcement', 'runtime', 'task-stage', 'task-method', 'task-file', 'task-progress',
+  'task-progress-fill', 'task-ratio', 'task-note', 'task-warnings', 'cancel-conversion',
+  'result-download', 'result-preview', 'result-info', 'result-video', 'result-audio', 'preview-error',
 ].map((id) => [id, document.getElementById(id)]));
 
 let selectedFile = null;
@@ -33,6 +32,11 @@ let outputType = 'video';
 let selectedFormat = 'mp4';
 let metadataCleanup = null;
 let dragDepth = 0;
+let busy = false;
+let generation = 0;
+let lastProgressPaint = 0;
+let currentWarnings = new Set();
+const controller = new ConversionController();
 
 function extensionFor(name) {
   return name.includes('.') ? name.split('.').pop().toLowerCase() : '';
@@ -71,15 +75,16 @@ function clearError() {
 }
 
 function updateOutputName() {
-  const stem = selectedFile ? selectedFile.name.replace(/\.[^.]+$/, '') : '';
+  const stem = selectedFile ? outputFilename(selectedFile.name, selectedFormat).replace(/\.[^.]+$/, '') : '';
   elements['output-name'].replaceChildren();
   elements['output-name'].append(document.createTextNode(stem || '选择文件后显示名称'));
   const suffix = document.createElement('span');
   suffix.textContent = `.${selectedFormat}`;
   elements['output-name'].append(suffix);
   elements['engine-note'].textContent = selectedFile
-    ? '文件已就位 · 真实转换引擎尚未接入'
-    : '设计阶段 · 转换功能待接入';
+    ? '文件已就位 · 全程在本机处理'
+    : '选择文件后开始 · 建议使用电脑浏览器';
+  elements['convert-button'].disabled = busy || !selectedFile;
 }
 
 function renderFormats() {
@@ -97,6 +102,8 @@ function renderFormats() {
     detail.textContent = format.detail;
     button.append(title, detail);
     button.addEventListener('click', () => {
+      if (busy) return;
+      invalidateResult();
       selectedFormat = format.value;
       for (const candidate of elements['format-options'].children) {
         candidate.setAttribute('aria-pressed', String(candidate === button));
@@ -132,6 +139,8 @@ function updateModeExplanation() {
 }
 
 function setOutputType(type) {
+  if (busy) return;
+  invalidateResult();
   outputType = type;
   selectedFormat = FORMAT_OPTIONS[type][0].value;
   elements['video-tab'].setAttribute('aria-pressed', String(type === 'video'));
@@ -170,6 +179,7 @@ function readDuration(file, extension) {
 
 function chooseFile(file) {
   if (!file) return;
+  if (busy) return;
   clearError();
   const extension = extensionFor(file.name);
   if (!AUDIO_EXTENSIONS.has(extension) && !VIDEO_EXTENSIONS.has(extension)) {
@@ -185,6 +195,7 @@ function chooseFile(file) {
     return;
   }
   if (metadataCleanup) metadataCleanup();
+  invalidateResult();
   selectedFile = file;
   elements['source-name'].textContent = file.name;
   elements['source-size'].textContent = formatSize(file.size);
@@ -198,10 +209,12 @@ function chooseFile(file) {
   if (AUDIO_EXTENSIONS.has(extension)) setOutputType('audio');
   updateOutputName();
   readDuration(file, extension);
-  announce(`已选择 ${file.name}。可以设置输出格式；此版本暂未接入真实转换。`);
+  announce(`已选择 ${file.name}。设置输出格式后即可开始转换。`);
 }
 
 function removeFile() {
+  if (busy) return;
+  invalidateResult();
   selectedFile = null;
   if (metadataCleanup) metadataCleanup();
   elements['file-input'].value = '';
@@ -215,6 +228,7 @@ function removeFile() {
 }
 
 function openFileDialog() {
+  if (busy) return;
   elements['file-input'].value = '';
   elements['file-input'].click();
 }
@@ -225,8 +239,10 @@ elements['remove-file'].addEventListener('click', removeFile);
 elements['file-input'].addEventListener('change', (event) => chooseFile(event.target.files[0]));
 elements['video-tab'].addEventListener('click', () => setOutputType('video'));
 elements['audio-tab'].addEventListener('click', () => setOutputType('audio'));
-elements['processing-mode'].addEventListener('change', updateModeExplanation);
+elements['processing-mode'].addEventListener('change', () => { invalidateResult(); updateModeExplanation(); });
+elements.quality.addEventListener('change', invalidateResult);
 elements.resolution.addEventListener('change', () => {
+  invalidateResult();
   if (elements.resolution.value !== 'original') {
     elements['processing-mode'].value = 'encode';
     updateModeExplanation();
@@ -255,25 +271,177 @@ elements.dropzone.addEventListener('drop', (event) => {
   chooseFile(files[0]);
 });
 
-elements['show-states'].addEventListener('click', () => {
-  elements['state-preview'].hidden = !elements['state-preview'].hidden;
-  elements['show-states'].setAttribute('aria-expanded', String(!elements['state-preview'].hidden));
-  if (!elements['state-preview'].hidden) {
-    elements['state-preview'].scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+function releasePlayers() {
+  for (const player of [elements['result-video'], elements['result-audio']]) {
+    player.pause();
+    player.removeAttribute('src');
+    player.load();
+    player.hidden = true;
   }
+}
+
+function invalidateResult() {
+  if (busy) return;
+  releasePlayers();
+  controller.clearResult();
+  elements.runtime.hidden = true;
+  elements['result-preview'].hidden = true;
+  elements['result-download'].hidden = true;
+  elements['result-download'].removeAttribute('href');
+  elements['preview-error'].hidden = true;
+  currentWarnings.clear();
+}
+
+function setBusy(value) {
+  busy = value;
+  for (const control of document.querySelectorAll('select, .format-option, #choose-file, #replace-file, #remove-file, #file-input, #video-tab, #audio-tab')) {
+    control.disabled = value;
+  }
+  if (!value) {
+    elements['video-tab'].disabled = Boolean(selectedFile && AUDIO_EXTENSIONS.has(extensionFor(selectedFile.name)));
+    updateQualityState();
+  }
+  elements['convert-button'].disabled = value || !selectedFile;
+  elements['convert-button'].firstChild.textContent = value ? '正在处理，请稍候 ' : '开始转换 ';
+  elements['cancel-conversion'].hidden = !value;
+  elements.runtime.setAttribute('aria-busy', String(value));
+}
+
+function showProgress(ratio, stage) {
+  const progress = elements['task-progress'];
+  const known = ratio !== null && Number.isFinite(ratio);
+  progress.classList.toggle('is-indeterminate', !known);
+  if (known) {
+    const percentage = Math.max(0, Math.min(100, Math.floor(ratio * 100)));
+    elements['task-progress-fill'].style.width = `${percentage}%`;
+    elements['task-ratio'].textContent = `${percentage}%`;
+    progress.setAttribute('aria-valuenow', String(percentage));
+    progress.setAttribute('aria-valuetext', `${stage || '当前阶段'} ${percentage}%`);
+  } else {
+    elements['task-ratio'].textContent = '…';
+    progress.removeAttribute('aria-valuenow');
+    progress.setAttribute('aria-valuetext', stage || '正在处理');
+  }
+}
+
+const STAGES = {
+  'loading-engine': ['正在加载转换程序', '首次使用需下载约 32 MB。下载的是程序，不是你的视频。'],
+  probing: ['正在检测文件', '读取真实编码、音轨和时长，选择适合的处理方式。'],
+  planning: ['正在准备转换', '根据源文件编码及输出设置制定处理方式。'],
+  converting: ['正在转换文件', '请保持页面打开。处理时间取决于文件和设备性能，可以随时取消。'],
+  finalizing: ['正在整理转换结果', '检查输出文件并准备下载，完成后才会开放下载按钮。'],
+};
+
+function showWarnings() {
+  elements['task-warnings'].textContent = [...currentWarnings].join('\n');
+  elements['task-warnings'].hidden = !currentWarnings.size;
+}
+
+function onConversionEvent(event) {
+  if (event.type === 'stage') {
+    const [title, detail] = STAGES[event.stage];
+    elements['task-stage'].textContent = title;
+    elements['task-note'].textContent = detail;
+    showProgress(null, title);
+    lastProgressPaint = 0;
+    announce(title);
+  } else if (event.type === 'progress') {
+    const now = performance.now();
+    if (now - lastProgressPaint < 150 && event.ratio !== 1) return;
+    lastProgressPaint = now;
+    showProgress(event.ratio, STAGES[event.stage]?.[0]);
+    if (event.stage === 'loading-engine' && event.ratio === 1) {
+      elements['task-note'].textContent = '程序下载完成，正在初始化本机转换引擎。';
+    }
+  } else if (event.type === 'warning') {
+    currentWarnings.add(event.message);
+    showWarnings();
+  } else if (event.type === 'plan') {
+    const names = {copy: '快速转封装', 'audio-encode': '音频编码', encode: '重新编码'};
+    const codecs = [event.media.video?.codec_name, event.media.audio?.codec_name].filter(Boolean).join(' / ').toUpperCase();
+    elements['task-method'].textContent = `${names[event.method]}${codecs ? ` · ${codecs}` : ''}`;
+    if (metadataCleanup) metadataCleanup();
+    elements['source-duration'].textContent = formatDuration(event.media.duration);
+    for (const warning of event.warnings) currentWarnings.add(warning.message);
+    showWarnings();
+  }
+}
+
+async function startConversion() {
+  if (busy || !selectedFile) return;
+  invalidateResult();
+  clearError();
+  const attempt = ++generation;
+  const request = {
+    file: selectedFile,
+    format: selectedFormat,
+    mode: elements['processing-mode'].value,
+    quality: elements.quality.value,
+    resolution: outputType === 'audio' ? 'original' : elements.resolution.value,
+  };
+  elements.runtime.hidden = false;
+  elements.runtime.dataset.status = 'running';
+  elements['task-file'].textContent = `${selectedFile.name} → ${selectedFormat.toUpperCase()}`;
+  elements['task-method'].textContent = '本机处理';
+  elements['task-warnings'].hidden = true;
+  setBusy(true);
+  elements.runtime.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'nearest'});
+  try {
+    const result = await controller.start(request, onConversionEvent);
+    if (attempt !== generation) return;
+    elements.runtime.dataset.status = 'complete';
+    elements['task-stage'].textContent = '转换完成，可以带走了。';
+    elements['task-note'].textContent = '结果已通过媒体检查。请及时下载，关闭或刷新页面后不会保留。';
+    elements['task-file'].textContent = result.filename;
+    elements['result-download'].href = result.url;
+    elements['result-download'].download = result.filename;
+    elements['result-download'].querySelector('span').textContent = `下载 ${request.format.toUpperCase()}`;
+    elements['result-download'].hidden = false;
+    elements['result-info'].textContent = `${formatSize(result.size)} · ${formatDuration(result.outputMedia.duration)} · 本机生成`;
+    elements['result-preview'].hidden = false;
+    const player = result.mime.startsWith('video/') ? elements['result-video'] : elements['result-audio'];
+    player.src = result.url;
+    player.hidden = false;
+    showProgress(1, '转换完成');
+    announce(`转换完成。${result.filename} 已准备好下载。`);
+  } catch (error) {
+    if (attempt !== generation) return;
+    const wasCancelled = error.name === 'AbortError';
+    elements.runtime.dataset.status = wasCancelled ? 'cancelled' : 'error';
+    elements['task-stage'].textContent = wasCancelled ? '任务已取消' : '这次没有完成转换。';
+    elements['task-note'].textContent = wasCancelled ? '任务已经停止，可以调整设置后重新开始。' : error.message;
+    showProgress(0, wasCancelled ? '已取消' : '转换失败');
+    elements['task-ratio'].textContent = '—';
+    announce(elements['task-note'].textContent);
+  } finally {
+    if (attempt === generation) setBusy(false);
+  }
+}
+
+elements['convert-button'].addEventListener('click', startConversion);
+elements['cancel-conversion'].addEventListener('click', () => {
+  if (!busy) return;
+  generation += 1;
+  controller.cancel();
+  elements.runtime.dataset.status = 'cancelled';
+  elements['task-stage'].textContent = '任务已取消';
+  elements['task-note'].textContent = '任务已经停止。修改设置或点击开始转换即可重试。';
+  showProgress(0, '已取消');
+  elements['task-ratio'].textContent = '—';
+  setBusy(false);
+  announce('任务已取消。');
 });
-elements['show-states'].setAttribute('aria-controls', 'state-preview');
-elements['show-states'].setAttribute('aria-expanded', 'false');
-document.querySelectorAll('[data-state]').forEach((button) => {
-  button.addEventListener('click', () => {
-    const state = button.dataset.state;
-    for (const candidate of document.querySelectorAll('[data-state]')) {
-      candidate.setAttribute('aria-pressed', String(candidate === button));
-    }
-    for (const example of ['processing', 'completed', 'error']) {
-      document.getElementById(`${example}-example`).hidden = example !== state;
-    }
+for (const player of [elements['result-video'], elements['result-audio']]) {
+  player.addEventListener('error', () => {
+    if (player.getAttribute('src')) elements['preview-error'].hidden = false;
   });
+}
+window.addEventListener('pagehide', () => {
+  generation += 1;
+  controller.cancel();
+  setBusy(false);
+  invalidateResult();
+  controller.dispose();
 });
 
 renderFormats();

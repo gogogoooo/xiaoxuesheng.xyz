@@ -5,3 +5,9 @@
 /embed
   X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
   Referrer-Policy: no-referrer
+
+/tools/media-converter/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/tools/media-converter/engine/engine-manifest.json
+  Cache-Control: no-cache

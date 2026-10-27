@@ -1,3 +1,4 @@
+/* oxlint-disable nextjs/no-html-link-for-pages -- 入口均指向 public 中的独立静态网页，需要浏览器原生跳转。 */
 import { ArrowUpRight } from 'lucide-react';
 import { SiteShell } from '@/components/site-shell';
 
@@ -15,6 +16,21 @@ export default function AppsPage() {
           这里会慢慢收集小程序、在线 Demo
           和实用小工具。每一个小作品都会带着它的由来、简介和访问入口来到这里。
         </p>
+        <section className="app-demo-card" aria-labelledby="media-converter-title">
+          <div className="app-demo-card__copy">
+            <p className="app-demo-card__eyebrow">本机工具 · 音视频转换</p>
+            <h2 id="media-converter-title">格式工坊</h2>
+            <p>
+              把 FLV、MOV、MKV 等视频转换成 MP4 或 WebM，也能提取 MP3、WAV、AAC、FLAC 音频。文件留在你的设备上，无需上传。
+            </p>
+            <p className="app-demo-card__hint">
+              单文件小于 1 GB · 建议电脑端使用 · 实际处理能力取决于可用内存
+            </p>
+            <a className="app-demo-card__link" href="/tools/media-converter/">
+              打开格式工坊 <ArrowUpRight aria-hidden="true" size={18} />
+            </a>
+          </div>
+        </section>
         <section
           className="app-demo-card vehicle-dispatch-v3-card"
           aria-labelledby="vehicle-dispatch-v3-title"

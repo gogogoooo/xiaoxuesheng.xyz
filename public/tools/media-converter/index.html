@@ -8,7 +8,7 @@
   <title>格式工坊 · 音视频转换</title>
   <meta name="description" content="一个在浏览器中处理音视频的轻量工具。选择文件、调整格式，将转换过程留在自己的设备上。">
   <link rel="stylesheet" href="./styles.css">
-  <script src="./app.js" defer></script>
+  <script src="./app.js" type="module"></script>
 </head>
 <body>
   <svg class="svg-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -46,7 +46,7 @@
       </div>
     </section>
 
-    <div class="preview-banner"><span class="preview-label">设计预览</span><p>可以体验文件选择和格式设置；真实转换引擎尚未接入。</p><button type="button" id="show-states">查看状态设计 <span aria-hidden="true">↗</span></button></div>
+    <div class="preview-banner"><span class="preview-label">本机转换</span><p>首次使用需下载约 32 MB 的转换程序。视频文件全程留在你的设备上。</p><span class="engine-availability">一次处理一个文件</span></div>
 
     <section class="workspace" aria-label="音视频转换工作区">
       <div class="source-panel">
@@ -67,7 +67,7 @@
         </div>
         <p class="file-error" id="file-error" role="alert" hidden></p>
         <p class="memory-notice" id="memory-notice" hidden><svg><use href="#i-info"/></svg>这是一个较大的文件。建议使用电脑浏览器，并关闭不需要的标签页；实际可处理大小取决于可用内存。</p>
-        <div class="local-notice"><svg><use href="#i-lock"/></svg><p><b>文件留在本机</b><span>选择文件不会上传。后续转换也将在浏览器中完成。</span></p></div>
+        <div class="local-notice"><svg><use href="#i-lock"/></svg><p><b>文件留在本机</b><span>无需上传，转换使用你设备的 CPU 与内存。</span></p></div>
       </div>
 
       <div class="output-panel">
@@ -81,24 +81,26 @@
         <details class="advanced-settings"><summary><span>更多设置</span><span aria-hidden="true">＋</span></summary><div class="setting-row"><label for="resolution">输出分辨率</label><select id="resolution"><option value="original">保持原始</option><option value="1080">最高 1080p</option><option value="720">最高 720p</option></select></div><p>调整分辨率需要重新编码，处理时间通常更长。</p></details>
         <div class="output-summary"><span>输出文件</span><p id="output-name">选择文件后显示名称<span>.mp4</span></p></div>
         <button type="button" class="convert-button" id="convert-button" disabled>开始转换 <svg><use href="#i-arrow"/></svg></button>
-        <p class="engine-note" id="engine-note">设计阶段 · 转换功能待接入</p>
+        <p class="engine-note" id="engine-note">选择文件后开始 · 建议使用电脑浏览器</p>
       </div>
     </section>
 
-    <section class="state-preview" id="state-preview" aria-labelledby="states-title" hidden>
-      <div class="state-preview__header"><div><p class="eyebrow">WORKFLOW PREVIEW</p><h2 id="states-title">每一步，都看得见。</h2></div><span class="state-preview__badge">以下为静态界面示例，不执行转换</span></div>
-      <div class="state-switch" role="group" aria-label="查看转换状态示例"><button type="button" data-state="processing" aria-pressed="true">转换进行中</button><button type="button" data-state="completed" aria-pressed="false">转换已完成</button><button type="button" data-state="error" aria-pressed="false">遇到问题</button></div>
-      <div class="status-card" id="processing-example"><div class="status-icon status-icon--progress"><svg><use href="#i-arrow"/></svg></div><div class="status-content"><div class="status-title"><h3>正在处理视频</h3><span>48<span>%</span></span></div><p>示例视频.flv <span aria-hidden="true">→</span> 示例视频.mp4</p><div class="progress-track" role="progressbar" aria-label="示例转换进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="48"><span></span></div><div class="progress-caption"><span>示例进度 · 重新编码</span><span>处理时间取决于设备性能</span></div></div></div>
-      <div class="status-card" id="completed-example" hidden><div class="status-icon status-icon--success"><svg><use href="#i-check"/></svg></div><div class="status-content"><h3>转换完成，可以带走了。</h3><p>示例视频.mp4 · 文件信息将在实际转换后显示</p><span class="result-note">下载按钮在真实转换完成后可用。</span></div><button type="button" class="download-example" disabled><svg><use href="#i-download"/></svg>下载 MP4</button></div>
-      <div class="status-card" id="error-example" hidden><div class="status-icon status-icon--error"><svg><use href="#i-info"/></svg></div><div class="status-content"><h3>这次没有完成转换。</h3><p>可能是文件编码不受支持，或浏览器可用内存不足。</p><span class="result-note">建议尝试更小的文件，或使用电脑浏览器重新处理。</span></div></div>
+    <section class="state-preview runtime-panel" id="runtime" aria-labelledby="task-stage" hidden>
+      <div class="state-preview__header"><div><p class="eyebrow">CONVERSION TASK</p><h2 id="task-stage">准备处理文件</h2></div><span class="state-preview__badge" id="task-method">本机处理</span></div>
+      <p class="runtime-file" id="task-file"></p>
+      <div class="runtime-progress-row"><div class="progress-track" id="task-progress" role="progressbar" aria-label="当前阶段进度" aria-valuemin="0" aria-valuemax="100"><span id="task-progress-fill"></span></div><span id="task-ratio">…</span></div>
+      <p class="runtime-note" id="task-note">正在准备转换程序。</p>
+      <p class="runtime-warnings" id="task-warnings" hidden></p>
+      <div class="runtime-actions"><button type="button" class="cancel-button" id="cancel-conversion">取消任务</button><a class="result-download" id="result-download" hidden><svg><use href="#i-download"/></svg><span>下载文件</span></a></div>
+      <div class="result-preview" id="result-preview" hidden><p id="result-info"></p><video id="result-video" controls playsinline preload="metadata" hidden></video><audio id="result-audio" controls preload="metadata" hidden></audio><p id="preview-error" hidden>当前浏览器无法预览该编码，可以下载后使用其他播放器打开。</p></div>
     </section>
 
     <section class="usage-notes" aria-label="使用说明"><div><span class="note-number">01 /</span><h3>本机处理</h3><p>视频无需上传，转换使用你设备的算力与内存。</p></div><div><span class="note-number">02 /</span><h3>一次一个，更从容</h3><p>单文件小于 1 GB。大文件建议在电脑端处理。</p></div><div><span class="note-number">03 /</span><h3>格式不同，耗时不同</h3><p>转封装通常更快；重新编码需要更多时间。</p></div></section>
 
-    <section class="faq" aria-labelledby="faq-title"><div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">开始之前，<br>你可能想知道。</h2></div><div class="faq-items"><details><summary>视频会上传到哪里？<span aria-hidden="true">＋</span></summary><p>此版本是界面设计预览，不会上传文件。计划接入浏览器端转换引擎，源文件和输出文件均在本机处理；首次使用时只需下载转换引擎。</p></details><details><summary>为什么小于 1 GB 也可能失败？<span aria-hidden="true">＋</span></summary><p>浏览器处理时还需要容纳运行程序、源文件和输出文件。1 GB 是文件选择上限，不是稳定处理的保证。内存较少的设备或手机可能无法处理较大的文件。</p></details><details><summary>换格式会损失画质吗？<span aria-hidden="true">＋</span></summary><p>快速转封装会原样保留音视频数据；需要重新编码时，画质和文件大小取决于输出设置。具体支持范围以接入的转换引擎为准。</p></details><details><summary>为什么选中文件后不能开始转换？<span aria-hidden="true">＋</span></summary><p>当前是第一版页面设计，文件选择、格式配置与状态示例可以体验，真实转换功能尚未接入。页面不会生成虚假的转换结果。</p></details></div></section>
+    <section class="faq" aria-labelledby="faq-title"><div><p class="eyebrow">GOOD TO KNOW</p><h2 id="faq-title">开始之前，<br>你可能想知道。</h2></div><div class="faq-items"><details><summary>视频会上传到哪里？<span aria-hidden="true">＋</span></summary><p>文件不会上传。网页只下载运行所需的转换程序，源文件和输出文件都在本机处理。页面关闭后，本次任务和未下载的结果不会保留。</p></details><details><summary>为什么小于 1 GB 也可能失败？<span aria-hidden="true">＋</span></summary><p>浏览器处理时还需要容纳运行程序、源文件和输出文件。1 GB 是文件选择上限，不是稳定处理的保证。内存较少的设备或手机可能无法处理较大的文件。</p></details><details><summary>换格式会损失画质吗？<span aria-hidden="true">＋</span></summary><p>快速转封装会原样保留音视频数据；需要重新编码时，画质和文件大小取决于输出设置。无损格式不会恢复原文件已经丢失的音质。多轨道文件默认只保留第一条视频和音频，字幕不保留。</p></details><details><summary>转换时可以关闭页面吗？<span aria-hidden="true">＋</span></summary><p>请保持页面打开。你可以随时点击“取消任务”停止处理，之后重新开始；关闭或刷新页面也会终止转换。取消后的任务不支持断点续转。</p></details></div></section>
   </main>
 
-  <footer class="site-footer"><span>造物档案馆 <span class="footer-dot">·</span> 把小工具，做得顺手一点。</span><span>格式工坊 / 设计预览</span></footer>
+  <footer class="site-footer"><span>造物档案馆 <span class="footer-dot">·</span> 把小工具，做得顺手一点。</span><span>格式工坊 / 本机处理 <a class="license-link" href="./vendor/NOTICES.txt" target="_blank" rel="noopener">开源组件</a></span></footer>
   <div class="sr-only" id="announcement" role="status" aria-live="polite"></div>
 </body>
 </html>

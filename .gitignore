@@ -41,3 +41,7 @@ next-env.d.ts
 
 # local deployment bundle
 /xiaoxuesheng-pages-upload.zip
+
+# browser media engine assets, generated from pinned npm packages
+/public/tools/media-converter/vendor/
+/public/tools/media-converter/engine/engine-manifest.json
