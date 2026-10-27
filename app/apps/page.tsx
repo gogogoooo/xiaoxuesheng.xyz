@@ -21,7 +21,7 @@ export default function AppsPage() {
             <p className="app-demo-card__eyebrow">本机工具 · 音视频转换</p>
             <h2 id="media-converter-title">格式工坊</h2>
             <p>
-              把 FLV、MOV、MKV 等视频转换成 MP4 或 WebM，也能提取 MP3、WAV、AAC、FLAC 音频。文件留在你的设备上，无需上传。
+              把 FLV、MOV、MKV 等视频转换成 MP4、WebM 或 FLV，也能提取 MP3、WAV、AAC、FLAC 音频。文件留在你的设备上，无需上传。
             </p>
             <p className="app-demo-card__hint">
               单文件小于 1 GB · 建议电脑端使用 · 实际处理能力取决于可用内存
