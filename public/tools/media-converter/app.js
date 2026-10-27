@@ -1,5 +1,5 @@
-import {ConversionController} from './converter-controller.js';
-import {MAX_FILE_SIZE, outputFilename} from './conversion-policy.js';
+import {ConversionController} from './converter-controller.js?v=20261027-flv';
+import {MAX_FILE_SIZE, outputFilename} from './conversion-policy.js?v=20261027-flv';
 const LARGE_FILE_SIZE = 300_000_000;
 const AUDIO_EXTENSIONS = new Set(['mp3', 'wav', 'm4a', 'aac', 'flac', 'ogg']);
 const VIDEO_EXTENSIONS = new Set(['flv', 'mp4', 'mov', 'mkv', 'webm', 'avi']);

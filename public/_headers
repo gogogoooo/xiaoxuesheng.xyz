@@ -9,5 +9,17 @@
 /tools/media-converter/vendor/*
   Cache-Control: public, max-age=31536000, immutable
 
-/tools/media-converter/engine/engine-manifest.json
+/tools/media-converter/engine/*
+  Cache-Control: no-cache
+
+/tools/media-converter/app.js
+  Cache-Control: no-cache
+
+/tools/media-converter/conversion-policy.js
+  Cache-Control: no-cache
+
+/tools/media-converter/converter-controller.js
+  Cache-Control: no-cache
+
+/tools/media-converter/styles.css
   Cache-Control: no-cache

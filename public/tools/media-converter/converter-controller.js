@@ -1,5 +1,5 @@
-import {FFmpegAdapter} from './engine/ffmpeg-adapter.js';
-import {ConversionError, validateFile} from './conversion-policy.js';
+import {FFmpegAdapter} from './engine/ffmpeg-adapter.js?v=20261027-flv';
+import {ConversionError, validateFile} from './conversion-policy.js?v=20261027-flv';
 
 export class ConversionController {
   constructor({adapterFactory = () => new FFmpegAdapter()} = {}) {

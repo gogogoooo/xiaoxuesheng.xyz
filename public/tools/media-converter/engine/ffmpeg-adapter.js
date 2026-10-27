@@ -1,7 +1,7 @@
-import {loadCoreResources} from './core-loader.js';
-import {withDeadline} from './deadline.js';
-import {parseProbeResult} from './probe-result.js';
-import {ConversionError, MAX_FILE_SIZE, validateFile, createConversionPlan, outputFilename} from '../conversion-policy.js';
+import {loadCoreResources} from './core-loader.js?v=20261027-flv';
+import {withDeadline} from './deadline.js?v=20261027-flv';
+import {parseProbeResult} from './probe-result.js?v=20261027-flv';
+import {ConversionError, MAX_FILE_SIZE, validateFile, createConversionPlan, outputFilename} from '../conversion-policy.js?v=20261027-flv';
 
 const cancelled = () => new DOMException('任务已取消', 'AbortError');
 

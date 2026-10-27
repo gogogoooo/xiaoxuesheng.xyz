@@ -1,4 +1,4 @@
-import {ConversionError, normalizeMedia} from '../conversion-policy.js';
+import {ConversionError, normalizeMedia} from '../conversion-policy.js?v=20261027-flv';
 
 export function parseProbeResult(code, text) {
   const failed = () => new ConversionError('PROBE_FAILED', '无法读取文件信息。文件可能已损坏，或使用了当前引擎不支持的编码。');
